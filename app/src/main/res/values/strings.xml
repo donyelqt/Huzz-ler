@@ -1,0 +1,45 @@
+<resources>
+    <string name="app_name">Huzzler</string>
+    
+    <!-- Navigation -->
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_rewards">Rewards</string>
+    <string name="title_chat">Chat</string>
+    <string name="title_profile">Profile</string>
+    
+    <!-- Dashboard -->
+    <string name="hello_user">Hello, %1$s!</string>
+    <string name="maximize_potential">Let\'s maximize\nyour full potential</string>
+    <string name="points">Points</string>
+    <string name="streak">Streak</string>
+    <string name="prime_rate">Prime Rate</string>
+    <string name="your_assignments">Your Assignments</string>
+    <string name="view_all">View All</string>
+    <string name="complete">Complete</string>
+    <string name="details">Details</string>
+    <string name="due">Due: %1$s</string>
+    <string name="time_left">%1$s left</string>
+    
+    <!-- Rewards -->
+    <string name="rewards_center">Rewards Center</string>
+    <string name="available_points">Available Points</string>
+    <string name="rank_scholar">Rank: Scholar</string>
+    <string name="game_rewards">Game Rewards</string>
+    <string name="academic_perks">Academic Perks</string>
+    <string name="popular">Popular</string>
+    <string name="redeem">Redeem</string>
+    <string name="points_format">%1$d points</string>
+    
+    <!-- Chat -->
+    <string name="huzzler_ai">HUZZ-LER</string>
+    <string name="ai_greeting">Hey buddy, need a quick way to submit during prime time? or are you rushing?</string>
+    <string name="send_files_through">Send Files through : …</string>
+    <string name="send_through">Send through : ▲</string>
+    <string name="feel_free_to_ask">Feel free to ask</string>
+    <string name="input_hint">Input Text...</string>
+    
+    <!-- Common -->
+    <string name="loading">Loading...</string>
+    <string name="error">Error</string>
+    <string name="retry">Retry</string>
+</resources>
