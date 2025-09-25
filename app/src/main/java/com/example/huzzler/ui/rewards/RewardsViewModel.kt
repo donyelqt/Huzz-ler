@@ -21,8 +21,8 @@ class RewardsViewModel @Inject constructor() : ViewModel() {
     private val _rewards = MutableLiveData<List<Reward>>()
     val rewards: LiveData<List<Reward>> = _rewards
 
-    private val _selectedCategory = MutableLiveData<com.example.huzzler.ui.rewards.RewardCategory>()
-    val selectedCategory: LiveData<com.example.huzzler.ui.rewards.RewardCategory> = _selectedCategory
+    private val _selectedCategory = MutableLiveData<RewardCategory>()
+    val selectedCategory: LiveData<RewardCategory> = _selectedCategory
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
@@ -30,7 +30,7 @@ class RewardsViewModel @Inject constructor() : ViewModel() {
     private val allRewards = mutableListOf<Reward>()
 
     init {
-        _selectedCategory.value = com.example.huzzler.ui.rewards.RewardCategory.GAME_REWARDS
+        _selectedCategory.value = RewardCategory.GAME_REWARDS
     }
 
     fun loadRewards() {
@@ -96,21 +96,21 @@ class RewardsViewModel @Inject constructor() : ViewModel() {
                 )
             )
             
-            filterRewardsByCategory(_selectedCategory.value ?: com.example.huzzler.ui.rewards.RewardCategory.GAME_REWARDS)
+            filterRewardsByCategory(_selectedCategory.value ?: RewardCategory.GAME_REWARDS)
             _isLoading.value = false
         }
     }
 
-    fun selectCategory(category: com.example.huzzler.ui.rewards.RewardCategory) {
+    fun selectCategory(category: RewardCategory) {
         _selectedCategory.value = category
         filterRewardsByCategory(category)
     }
 
-    private fun filterRewardsByCategory(category: com.example.huzzler.ui.rewards.RewardCategory) {
+    private fun filterRewardsByCategory(category: RewardCategory) {
         val filteredRewards = when (category) {
-            com.example.huzzler.ui.rewards.RewardCategory.GAME_REWARDS -> 
+            RewardCategory.GAME_REWARDS ->
                 allRewards.filter { it.category == RewardCategory.GAME_REWARDS }
-            com.example.huzzler.ui.rewards.RewardCategory.ACADEMIC_PERKS -> 
+            RewardCategory.ACADEMIC_PERKS ->
                 allRewards.filter { it.category == RewardCategory.ACADEMIC_PERKS }
         }
         _rewards.value = filteredRewards

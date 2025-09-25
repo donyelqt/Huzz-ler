@@ -73,15 +73,18 @@ class ChatFragment : Fragment() {
                     etMessage.text?.clear()
                 }
             }
-            
+
             btnAttachment.setOnClickListener {
                 // Handle file attachment
                 viewModel.handleFileAttachment()
             }
-            
+
             btnUpload.setOnClickListener {
-                // Handle file upload
                 viewModel.handleFileUpload()
+            }
+
+            btnBack.setOnClickListener {
+                requireActivity().onBackPressedDispatcher.onBackPressed()
             }
         }
     }

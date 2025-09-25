@@ -23,6 +23,7 @@
     <!-- Rewards -->
     <string name="rewards_center">Rewards Center</string>
     <string name="available_points">Available Points</string>
+    <string name="rank_template">Rank: %1$s</string>
     <string name="rank_scholar">Rank: Scholar</string>
     <string name="game_rewards">Game Rewards</string>
     <string name="academic_perks">Academic Perks</string>
