@@ -2,7 +2,9 @@ package com.example.huzzler.ui.auth
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.InputType
 import android.util.Patterns
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.huzzler.MainActivity
@@ -41,11 +43,32 @@ class SignInActivity : AppCompatActivity() {
                 }
             }
 
+            // Password toggle functionality
+            ivPasswordToggle.setOnClickListener {
+                togglePasswordVisibility()
+            }
+
             // Sign up redirect
             tvSignUp.setOnClickListener {
                 startActivity(Intent(this@SignInActivity, SignUpActivity::class.java))
                 finish()
             }
+        }
+    }
+
+    private fun togglePasswordVisibility() {
+        binding.apply {
+            if (etPassword.inputType == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
+                // Hide password
+                etPassword.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                ivPasswordToggle.setImageResource(android.R.drawable.ic_menu_view)
+            } else {
+                // Show password
+                etPassword.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                ivPasswordToggle.setImageResource(android.R.drawable.ic_menu_close_clear_cancel)
+            }
+            // Keep cursor at the end
+            etPassword.setSelection(etPassword.text.length)
         }
     }
 
@@ -80,17 +103,15 @@ class SignInActivity : AppCompatActivity() {
         var isValid = true
 
         if (!isValidEmail(email)) {
-            binding.tilEmail.error = "Please enter a valid email"
+            Toast.makeText(this, "Please enter a valid email", Toast.LENGTH_SHORT).show()
+            binding.etEmail.requestFocus()
             isValid = false
-        } else {
-            binding.tilEmail.error = null
         }
 
         if (password.isEmpty()) {
-            binding.tilPassword.error = "Please enter your password"
+            Toast.makeText(this, "Please enter your password", Toast.LENGTH_SHORT).show()
+            binding.etPassword.requestFocus()
             isValid = false
-        } else {
-            binding.tilPassword.error = null
         }
 
         return isValid

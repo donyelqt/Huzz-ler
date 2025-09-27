@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Focused state - darker gray -->
+    <item android:color="@color/gray_dark" android:state_focused="true" />
+    <!-- Default/unfocused state - medium gray for visibility -->
+    <item android:color="@color/gray_medium" />
+</selector>

@@ -1,18 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Huzzler Brand Colors -->
-    <color name="huzzler_red">#FF0000</color>
+    <color name="huzzler_red">#FF1F1F</color>
     <color name="huzzler_red_dark">#CC0000</color>
     
     <!-- Basic Colors -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    
+
     <!-- Gray Scale -->
     <color name="gray_dark">#666666</color>
     <color name="gray_medium">#999999</color>
     <color name="gray_light">#E0E0E0</color>
     <color name="gray_very_light">#F5F5F5</color>
+
+    <!-- Sign In Specific -->
+    <color name="sign_in_tagline">#9E9E9E</color>
+    <color name="sign_in_divider">#E5E5E5</color>
+    <color name="sign_in_border">#D1D1D1</color>
+    <color name="sign_in_hint">#BDBDBD</color>
+    <color name="sign_in_input_bg">#FFFFFF</color>
+    <color name="sign_in_button_black">#161616</color>
     
     <!-- Status Colors -->
     <color name="green">#4CAF50</color>
