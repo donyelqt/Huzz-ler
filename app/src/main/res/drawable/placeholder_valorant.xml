@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- Background -->
+    <path
+        android:fillColor="#FF4654"
+        android:pathData="M0,0h120v120H0z" />
+
+    <!-- Character silhouette placeholder -->
+    <path
+        android:fillColor="#FF6B7A"
+        android:pathData="M30,90 L50,40 L70,50 L90,90 Z" />
+    
+    <!-- Weapon placeholder -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M60,30 L80,35 L75,45 L55,40 Z" />
+        
+    <!-- Simple geometric shape for game aesthetic -->
+    <path
+        android:fillColor="#FF1F2A"
+        android:pathData="M20,20 L40,30 L30,50 L10,40 Z" />
+
+</vector>

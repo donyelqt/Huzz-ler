@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- Background -->
+    <path
+        android:fillColor="#6B46C1"
+        android:pathData="M0,0h120v120H0z" />
+
+    <!-- Character silhouette placeholder -->
+    <path
+        android:fillColor="#8B5FE8"
+        android:pathData="M40,85 L55,35 L65,45 L80,85 Z" />
+    
+    <!-- Magic/weapon placeholder -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M50,25 L70,30 L65,40 L45,35 Z" />
+        
+    <!-- Battle emblem placeholder -->
+    <path
+        android:fillColor="#4C1D95"
+        android:pathData="M25,10 A15,15 0 1,1 24.99,10 Z" />
+
+</vector>

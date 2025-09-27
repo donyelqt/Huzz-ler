@@ -5,9 +5,10 @@
     android:id="@+id/card_reward"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="16dp"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="4dp">
+    android:layout_marginBottom="12dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="2dp"
+    app:cardBackgroundColor="@color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,13 +17,21 @@
         android:padding="16dp">
 
         <!-- Reward Image -->
-        <ImageView
-            android:id="@+id/iv_reward_image"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:scaleType="centerCrop"
-            tools:src="@drawable/ic_valorant" />
+            app:cardCornerRadius="8dp"
+            app:cardElevation="0dp">
+            
+            <ImageView
+                android:id="@+id/iv_reward_image"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:scaleType="centerCrop"
+                tools:src="@drawable/placeholder_valorant" />
+                
+        </androidx.cardview.widget.CardView>
 
         <!-- Reward Info -->
         <LinearLayout
@@ -44,21 +53,23 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Valorant Points"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:fontFamily="sans-serif-medium" />
 
                 <TextView
                     android:id="@+id/tv_popular"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_popular_badge"
-                    android:paddingHorizontal="8dp"
-                    android:paddingVertical="2dp"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="4dp"
                     android:text="@string/popular"
-                    android:textColor="@color/orange"
+                    android:textColor="#8B4513"
                     android:textSize="10sp"
                     android:textStyle="bold"
+                    android:fontFamily="sans-serif-medium"
                     android:visibility="visible" />
 
             </LinearLayout>
@@ -70,9 +81,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:text="1,000 VP for weapon skins"
-                android:textColor="@color/white"
+                android:textColor="@color/gray_dark"
                 android:textSize="12sp"
-                android:alpha="0.8" />
+                android:fontFamily="sans-serif" />
 
             <!-- Game Tag -->
             <TextView
@@ -81,12 +92,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
                 android:background="@drawable/bg_game_tag"
-                android:paddingHorizontal="8dp"
+                android:paddingHorizontal="10dp"
                 android:paddingVertical="4dp"
                 android:text="Valorant"
                 android:textColor="@color/white"
                 android:textSize="10sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-medium" />
 
             <!-- Points and Redeem Button -->
             <LinearLayout
@@ -101,20 +113,25 @@
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:text="400 points"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:fontFamily="sans-serif-medium" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_redeem"
                     android:layout_width="wrap_content"
-                    android:layout_height="32dp"
+                    android:layout_height="36dp"
                     android:backgroundTint="@color/huzzler_red"
                     android:text="@string/redeem"
                     android:textColor="@color/white"
                     android:textSize="12sp"
                     android:textStyle="bold"
-                    app:cornerRadius="16dp" />
+                    android:fontFamily="sans-serif-medium"
+                    android:paddingHorizontal="16dp"
+                    app:cornerRadius="18dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp" />
 
             </LinearLayout>
 

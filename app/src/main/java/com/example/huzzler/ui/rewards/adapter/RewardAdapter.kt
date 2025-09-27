@@ -48,25 +48,16 @@ class RewardAdapter(
                     tvGameTag.visibility = View.GONE
                 }
                 
-                // Set reward image based on type
+                // Set reward image based on type (placeholders for now)
                 when (reward.title) {
                     "Valorant Points" -> {
-                        ivRewardImage.setImageResource(R.drawable.ic_valorant)
-                        cardReward.setCardBackgroundColor(
-                            root.context.getColor(R.color.valorant_red)
-                        )
+                        ivRewardImage.setImageResource(R.drawable.placeholder_valorant)
                     }
                     "MLBB Battle Pass" -> {
-                        ivRewardImage.setImageResource(R.drawable.ic_mlbb)
-                        cardReward.setCardBackgroundColor(
-                            root.context.getColor(R.color.mlbb_purple)
-                        )
+                        ivRewardImage.setImageResource(R.drawable.placeholder_mlbb)
                     }
                     else -> {
-                        ivRewardImage.setImageResource(R.drawable.ic_academic)
-                        cardReward.setCardBackgroundColor(
-                            root.context.getColor(R.color.academic_blue)
-                        )
+                        ivRewardImage.setImageResource(R.drawable.placeholder_academic)
                     }
                 }
                 

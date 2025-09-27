@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- Background -->
+    <path
+        android:fillColor="#3B82F6"
+        android:pathData="M0,0h120v120H0z" />
+
+    <!-- Academic cap -->
+    <path
+        android:fillColor="#1E40AF"
+        android:pathData="M60,20 L90,35 L60,50 L30,35 Z" />
+    
+    <!-- Cap tassel -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M85,30 L90,40 L88,42 L83,32 Z" />
+        
+    <!-- Book/diploma -->
+    <path
+        android:fillColor="#60A5FA"
+        android:pathData="M35,60 L85,60 L85,90 L35,90 Z" />
+        
+    <!-- Book lines -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2"
+        android:pathData="M40,70 L80,70" />
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2"
+        android:pathData="M40,75 L75,75" />
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2"
+        android:pathData="M40,80 L70,80" />
+
+</vector>

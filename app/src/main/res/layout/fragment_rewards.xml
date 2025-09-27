@@ -4,24 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/gray_very_light"
+    android:background="@color/white"
     android:orientation="vertical"
     tools:context=".ui.rewards.RewardsFragment">
 
-    <!-- Local header with back navigation -->
+    <!-- Header with back navigation -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        android:elevation="4dp"
         android:orientation="horizontal"
-        android:padding="16dp">
+        android:paddingVertical="16dp"
+        android:paddingHorizontal="20dp">
 
         <ImageButton
             android:id="@+id/btn_back"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:background="@drawable/circle_gray"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
             android:contentDescription="Back"
             android:src="@drawable/ic_arrow_back"
             android:tint="@color/black" />
@@ -34,8 +34,9 @@
             android:layout_weight="1"
             android:text="@string/rewards_center"
             android:textColor="@color/black"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-medium" />
 
     </LinearLayout>
 
@@ -48,7 +49,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:paddingHorizontal="20dp"
+            android:paddingVertical="16dp">
 
             <!-- Points Card -->
             <androidx.cardview.widget.CardView
