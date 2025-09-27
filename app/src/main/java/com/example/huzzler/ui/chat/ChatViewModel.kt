@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.huzzler.data.model.ChatMessage
+import com.example.huzzler.data.model.ChatOverview
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -21,6 +22,9 @@ class ChatViewModel @Inject constructor() : ViewModel() {
     private val _isTyping = MutableLiveData<Boolean>()
     val isTyping: LiveData<Boolean> = _isTyping
 
+    private val _overview = MutableLiveData(ChatOverview())
+    val overview: LiveData<ChatOverview> = _overview
+
     private val messagesList = mutableListOf<ChatMessage>()
 
     fun loadInitialMessage() {
@@ -33,6 +37,13 @@ class ChatViewModel @Inject constructor() : ViewModel() {
         
         messagesList.add(initialMessage)
         _messages.value = messagesList.toList()
+
+        // Simulate initial overview data
+        _overview.value = ChatOverview(
+            primeRate = 85,
+            dayStreak = 3,
+            points = 1240
+        )
     }
 
     fun sendMessage(content: String) {
@@ -109,15 +120,14 @@ class ChatViewModel @Inject constructor() : ViewModel() {
         _messages.value = messagesList.toList()
     }
 
-    fun handleFileUpload() {
-        // Handle file upload logic
+    fun handleCameraCapture() {
         val systemMessage = ChatMessage(
             id = UUID.randomUUID().toString(),
-            content = "Upload feature is ready! You can upload your completed assignments here for submission.",
+            content = "Camera integration coming soon! You'll be able to capture documents directly from the chat.",
             isFromUser = false,
             timestamp = Date()
         )
-        
+
         messagesList.add(systemMessage)
         _messages.value = messagesList.toList()
     }

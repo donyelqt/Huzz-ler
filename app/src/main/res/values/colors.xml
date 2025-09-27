@@ -3,7 +3,17 @@
     <!-- Huzzler Brand Colors -->
     <color name="huzzler_red">#FF1F1F</color>
     <color name="huzzler_red_dark">#CC0000</color>
-    
+    <color name="ai_pink">#FF4C7D</color>
+    <color name="ai_pink_light">#FFF5F8</color>
+    <color name="ai_chip_background">#FFE8ED</color>
+    <color name="ai_chip_text">#FF2D58</color>
+    <color name="ai_green_online">#2ECC71</color>
+    <color name="ai_status_background">#E6F8F0</color>
+    <color name="chat_ai_background">#F4F6FB</color>
+    <color name="chat_ai_stroke">#E4E9F5</color>
+    <color name="chat_user_background">#FF3B5F</color>
+    <color name="chat_timestamp">#9CA3AF</color>
+
     <!-- Basic Colors -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>

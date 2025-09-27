@@ -30,6 +30,17 @@
     <string name="popular">Popular</string>
     <string name="redeem">Redeem</string>
     <string name="points_format">%1$d points</string>
+    <string name="huzz_ai_title">HUZZ AI Motivator</string>
+    <string name="huzz_ai_subtitle">Your personal study companion</string>
+    <string name="status_online">Online</string>
+    <string name="status_offline">Offline</string>
+    <string name="metric_prime_rate">Prime Rate</string>
+    <string name="metric_day_streak">Day Streak</string>
+    <string name="metric_points">Points</string>
+    <string name="try_asking_about">Try asking about:</string>
+    <string name="suggestion_bst">I\'m struggling to start my BST implementation</string>
+    <string name="suggestion_prime_window">How do I maximize my Prime Window?</string>
+    <string name="suggestion_deadlines">Help me organize my upcoming deadlines</string>
     
     <!-- Chat -->
     <string name="huzzler_ai">HUZZ-LER</string>

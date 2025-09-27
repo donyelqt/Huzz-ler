@@ -59,8 +59,8 @@ class ChatAdapter : ListAdapter<ChatMessage, RecyclerView.ViewHolder>(ChatDiffCa
         fun bind(message: ChatMessage) {
             binding.apply {
                 tvMessage.text = message.content
-                
-                val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+
+                val timeFormat = SimpleDateFormat("h:mm a", Locale.getDefault())
                 tvTimestamp.text = timeFormat.format(message.timestamp)
             }
         }
@@ -74,7 +74,7 @@ class ChatAdapter : ListAdapter<ChatMessage, RecyclerView.ViewHolder>(ChatDiffCa
             binding.apply {
                 tvMessage.text = message.content
                 
-                val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+                val timeFormat = SimpleDateFormat("h:mm a", Locale.getDefault())
                 tvTimestamp.text = timeFormat.format(message.timestamp)
             }
         }
