@@ -1,7 +1,5 @@
 package com.example.huzzler.ui.rewards
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.huzzler.data.model.Reward
@@ -9,39 +7,34 @@ import com.example.huzzler.data.model.RewardCategory
 import com.example.huzzler.data.model.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class RewardsViewModel @Inject constructor() : ViewModel() {
 
-    private val _user = MutableLiveData<User>()
-    val user: LiveData<User> = _user
-
-    private val _rewards = MutableLiveData<List<Reward>>()
-    val rewards: LiveData<List<Reward>> = _rewards
-
-    private val _selectedCategory = MutableLiveData<RewardCategory>()
-    val selectedCategory: LiveData<RewardCategory> = _selectedCategory
-
-    private val _isLoading = MutableLiveData<Boolean>()
-    val isLoading: LiveData<Boolean> = _isLoading
-
     private val allRewards = mutableListOf<Reward>()
 
+    private val _uiState = MutableStateFlow(RewardsUiState())
+    val uiState: StateFlow<RewardsUiState> = _uiState.asStateFlow()
+
     init {
-        _selectedCategory.value = RewardCategory.GAME_REWARDS
+        loadRewards()
     }
 
     fun loadRewards() {
         viewModelScope.launch {
-            _isLoading.value = true
-            
+            _uiState.update { it.copy(isLoading = true) }
+
             // Simulate API call
             delay(1000)
-            
+
             // Mock user data
-            _user.value = User(
+            val user = User(
                 id = "1",
                 email = "daa6681@students.uc-bcf.edu.ph",
                 name = "Doniele Arys",
@@ -50,7 +43,7 @@ class RewardsViewModel @Inject constructor() : ViewModel() {
                 primeRate = 87,
                 rank = "Scholar"
             )
-            
+
             // Mock rewards data
             allRewards.clear()
             allRewards.addAll(
@@ -95,34 +88,57 @@ class RewardsViewModel @Inject constructor() : ViewModel() {
                     )
                 )
             )
-            
-            filterRewardsByCategory(_selectedCategory.value ?: RewardCategory.GAME_REWARDS)
-            _isLoading.value = false
+
+            val category = _uiState.value.selectedCategory
+            _uiState.update {
+                it.copy(
+                    user = user,
+                    rewards = filterRewards(category),
+                    isLoading = false
+                )
+            }
         }
     }
 
+    fun refresh() = loadRewards()
+
     fun selectCategory(category: RewardCategory) {
-        _selectedCategory.value = category
-        filterRewardsByCategory(category)
+        _uiState.update {
+            it.copy(
+                selectedCategory = category,
+                rewards = filterRewards(category)
+            )
+        }
     }
 
-    private fun filterRewardsByCategory(category: RewardCategory) {
-        val filteredRewards = when (category) {
+    private fun filterRewards(category: RewardCategory): List<Reward> {
+        return when (category) {
             RewardCategory.GAME_REWARDS ->
                 allRewards.filter { it.category == RewardCategory.GAME_REWARDS }
             RewardCategory.ACADEMIC_PERKS ->
                 allRewards.filter { it.category == RewardCategory.ACADEMIC_PERKS }
         }
-        _rewards.value = filteredRewards
     }
 
     fun onRewardClicked(reward: Reward) {
         // Handle reward redemption
-        val currentUser = _user.value ?: return
+        val currentUser = _uiState.value.user ?: return
         if (currentUser.points >= reward.pointsCost) {
             // Simulate redemption
             val updatedUser = currentUser.copy(points = currentUser.points - reward.pointsCost)
-            _user.value = updatedUser
+            _uiState.update {
+                it.copy(
+                    user = updatedUser,
+                    rewards = filterRewards(it.selectedCategory)
+                )
+            }
         }
     }
 }
+
+data class RewardsUiState(
+    val user: User? = null,
+    val selectedCategory: RewardCategory = RewardCategory.GAME_REWARDS,
+    val rewards: List<Reward> = emptyList(),
+    val isLoading: Boolean = false
+)

@@ -1,135 +1,130 @@
 package com.example.huzzler.ui.rewards
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
-import androidx.core.content.ContextCompat
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.huzzler.R
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.fragment.findNavController
+import com.example.huzzler.data.model.Reward
 import com.example.huzzler.data.model.RewardCategory
-import com.example.huzzler.databinding.FragmentRewardsBinding
-import com.example.huzzler.ui.rewards.adapter.RewardAdapter
+import com.example.huzzler.ui.theme.HuzzlerTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class RewardsFragment : Fragment() {
 
-    private var _binding: FragmentRewardsBinding? = null
-    private val binding get() = _binding!!
-
     private val viewModel: RewardsViewModel by viewModels()
-    private lateinit var rewardAdapter: RewardAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentRewardsBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        setupOnBackPressed()
-        setupRecyclerView()
-        setupObservers()
-        setupClickListeners()
-
-        viewModel.loadRewards()
-    }
-
-    private fun setupRecyclerView() {
-        rewardAdapter = RewardAdapter { reward ->
-            viewModel.onRewardClicked(reward)
-        }
-
-        binding.rvRewards.apply {
-            layoutManager = LinearLayoutManager(requireContext())
-            adapter = rewardAdapter
-        }
-    }
-
-    private fun setupObservers() {
-        viewModel.user.observe(viewLifecycleOwner) { user ->
-            binding.apply {
-                tvAvailablePoints.text = user.points.toString()
-                tvRank.text = getString(R.string.rank_template, user.rank)
-            }
-        }
-
-        viewModel.rewards.observe(viewLifecycleOwner) { rewards ->
-            rewardAdapter.submitList(rewards)
-        }
-
-        viewModel.selectedCategory.observe(viewLifecycleOwner) { category ->
-            updateCategorySelection(category)
-        }
-
-        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
-        }
-    }
-
-    private fun setupClickListeners() {
-        binding.apply {
-            btnGameRewards.setOnClickListener {
-                viewModel.selectCategory(RewardCategory.GAME_REWARDS)
-            }
-
-            btnAcademicPerks.setOnClickListener {
-                viewModel.selectCategory(RewardCategory.ACADEMIC_PERKS)
-            }
-
-            btnBack.setOnClickListener {
-                requireActivity().onBackPressedDispatcher.onBackPressed()
-            }
-        }
-    }
-
-    private fun setupOnBackPressed() {
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                // Handle back press logic here if needed, otherwise navigate up or pop back stack
-                if (isEnabled) {
-                    isEnabled = false
-                    requireActivity().onBackPressedDispatcher.onBackPressed()
-                }
-            }
-        })
-    }
-
-    private fun updateCategorySelection(category: RewardCategory) {
-        val activeColor = ContextCompat.getColorStateList(requireContext(), R.color.huzzler_red)
-        val inactiveColor = ContextCompat.getColorStateList(requireContext(), R.color.white)
-        val activeTextColor = ContextCompat.getColor(requireContext(), R.color.white)
-        val inactiveTextColor = ContextCompat.getColor(requireContext(), R.color.gray_dark)
-
-        binding.apply {
-            when (category) {
-                RewardCategory.GAME_REWARDS -> {
-                    btnGameRewards.backgroundTintList = activeColor
-                    btnGameRewards.setTextColor(activeTextColor)
-                    btnAcademicPerks.backgroundTintList = inactiveColor
-                    btnAcademicPerks.setTextColor(inactiveTextColor)
-                }
-                RewardCategory.ACADEMIC_PERKS -> {
-                    btnGameRewards.backgroundTintList = inactiveColor
-                    btnGameRewards.setTextColor(inactiveTextColor)
-                    btnAcademicPerks.backgroundTintList = activeColor
-                    btnAcademicPerks.setTextColor(activeTextColor)
+        Log.d("RewardsFragment", "Creating view")
+        return ComposeView(requireContext()).apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                HuzzlerTheme {
+                    RewardsScreenWithErrorHandling(
+                        viewModel = viewModel,
+                        onBack = {
+                            findNavController().navigateUp()
+                        }
+                    )
                 }
             }
         }
     }
+}
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+@Composable
+private fun RewardsScreenWithErrorHandling(
+    viewModel: RewardsViewModel,
+    onBack: () -> Unit
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    
+    // Check if there's an error state (you can expand this logic)
+    val hasError = false // You can add error state to your ViewModel if needed
+    
+    if (hasError) {
+        ErrorScreen(
+            onRetry = { viewModel.refresh() },
+            onBack = onBack
+        )
+    } else {
+        RewardsScreen(
+            uiState = uiState,
+            onCategorySelected = { category: RewardCategory ->
+                viewModel.selectCategory(category)
+            },
+            onRewardClick = { reward: Reward ->
+                viewModel.onRewardClicked(reward)
+            },
+            onBack = onBack
+        )
+    }
+}
+
+@Composable
+private fun ErrorScreen(
+    onRetry: () -> Unit,
+    onBack: () -> Unit
+) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(32.dp)
+        ) {
+            Text(
+                text = "Unable to load rewards",
+                style = MaterialTheme.typography.headlineSmall,
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+            
+            Text(
+                text = "Please check your connection and try again",
+                style = MaterialTheme.typography.bodyMedium,
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(top = 8.dp, bottom = 24.dp)
+            )
+            
+            Button(
+                onClick = onRetry,
+                modifier = Modifier.padding(bottom = 8.dp)
+            ) {
+                Text("Retry")
+            }
+            
+            Button(
+                onClick = onBack
+            ) {
+                Text("Go Back")
+            }
+        }
     }
 }

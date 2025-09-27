@@ -14,8 +14,7 @@
     <fragment
         android:id="@+id/navigation_rewards"
         android:name="com.example.huzzler.ui.rewards.RewardsFragment"
-        android:label="@string/title_rewards"
-        tools:layout="@layout/fragment_rewards" />
+        android:label="@string/title_rewards" />
 
     <fragment
         android:id="@+id/navigation_chat"
