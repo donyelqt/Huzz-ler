@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.huzzler.data.model.Assignment
+import com.example.huzzler.data.model.AssignmentCategory
+import com.example.huzzler.data.model.AssignmentDifficulty
 import com.example.huzzler.data.model.AssignmentPriority
 import com.example.huzzler.data.model.User
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -60,8 +62,10 @@ class DashboardViewModel @Inject constructor() : ViewModel() {
                     course = "CS 250 - Data Structures",
                     points = 150,
                     dueDate = dueDate1,
-                    timeLeft = "36h left",
-                    priority = AssignmentPriority.PRIME
+                    timeLeft = "36h",
+                    priority = AssignmentPriority.PRIME,
+                    difficulty = AssignmentDifficulty.MEDIUM,
+                    category = AssignmentCategory.GAMING
                 ),
                 Assignment(
                     id = "2",
@@ -69,8 +73,10 @@ class DashboardViewModel @Inject constructor() : ViewModel() {
                     course = "CS 250 - Data Structures",
                     points = 200,
                     dueDate = dueDate2,
-                    timeLeft = "12h left",
-                    priority = AssignmentPriority.GOTTA_DO
+                    timeLeft = "12h",
+                    priority = AssignmentPriority.GOTTA_DO,
+                    difficulty = AssignmentDifficulty.MEDIUM,
+                    category = AssignmentCategory.ACADEMIC
                 )
             )
             

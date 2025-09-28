@@ -1,13 +1,17 @@
 package com.example.huzzler.ui.dashboard.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.huzzler.R
 import com.example.huzzler.data.model.Assignment
+import com.example.huzzler.data.model.AssignmentCategory
+import com.example.huzzler.data.model.AssignmentDifficulty
 import com.example.huzzler.data.model.AssignmentPriority
 import com.example.huzzler.databinding.ItemAssignmentBinding
 import java.text.SimpleDateFormat
@@ -39,38 +43,56 @@ class AssignmentAdapter(
                 tvAssignmentTitle.text = assignment.title
                 tvCourse.text = assignment.course
                 tvPoints.text = "+${assignment.points}"
-                tvTimeLeft.text = assignment.timeLeft
-                
-                // Format due date
+                tvTimeLeft.text = root.context.getString(R.string.time_left, assignment.timeLeft)
+
                 val dateFormat = SimpleDateFormat("MMM dd, h:mm a", Locale.getDefault())
-                tvDueDate.text = "Due: ${dateFormat.format(assignment.dueDate)}"
-                
-                // Set priority indicator
-                val (priorityText, priorityColor) = when (assignment.priority) {
-                    AssignmentPriority.PRIME -> "Prime" to R.color.priority_prime
-                    AssignmentPriority.GOTTA_DO -> "Gotta Do" to R.color.priority_gotta_do
-                    AssignmentPriority.MEDIUM -> "Medium" to R.color.priority_medium
-                    AssignmentPriority.LOW -> "Low" to R.color.priority_low
+                tvDueDate.text = root.context.getString(R.string.due, dateFormat.format(assignment.dueDate))
+
+                val (priorityLabel, priorityColor, priorityBg) = when (assignment.priority) {
+                    AssignmentPriority.PRIME -> Triple("Prime", R.color.priority_prime, R.color.priority_prime_light)
+                    AssignmentPriority.GOTTA_DO -> Triple("Gotta Do", R.color.priority_gotta_do, R.color.priority_gotta_do_light)
+                    AssignmentPriority.MEDIUM -> Triple("Medium", R.color.priority_medium, R.color.priority_medium_light)
+                    AssignmentPriority.LOW -> Triple("Low", R.color.priority_low, R.color.priority_low_light)
                 }
-                
-                tvPriority.text = priorityText
+
+                tvPriority.text = priorityLabel
                 tvPriority.setTextColor(ContextCompat.getColor(root.context, priorityColor))
-                cardPriority.setCardBackgroundColor(ContextCompat.getColor(root.context, priorityColor))
-                
-                // Set click listeners
-                btnComplete.setOnClickListener {
-                    onAssignmentClick(assignment)
+                tintBackground(chipPriority, priorityBg)
+                tintBackground(viewPriorityIndicator, priorityColor)
+                cardAssignment.strokeColor = ContextCompat.getColor(root.context, priorityColor)
+
+                val (difficultyLabel, difficultyTextColor, difficultyBgColor) = when (assignment.difficulty) {
+                    AssignmentDifficulty.EASY -> Triple("Easy", R.color.difficulty_easy_text, R.color.difficulty_easy_bg)
+                    AssignmentDifficulty.MEDIUM -> Triple("Medium", R.color.difficulty_medium_text, R.color.difficulty_medium_bg)
+                    AssignmentDifficulty.HARD -> Triple("Hard", R.color.difficulty_hard_text, R.color.difficulty_hard_bg)
                 }
-                
-                btnDetails.setOnClickListener {
-                    onAssignmentClick(assignment)
+
+                tvDifficulty.text = difficultyLabel
+                tvDifficulty.setTextColor(ContextCompat.getColor(root.context, difficultyTextColor))
+                tintBackground(chipDifficulty, difficultyBgColor)
+
+                val (categoryColor, categoryIcon) = when (assignment.category) {
+                    AssignmentCategory.GAMING -> R.color.category_gaming to R.drawable.ic_category_gaming
+                    AssignmentCategory.ACADEMIC -> R.color.category_academic to R.drawable.ic_category_academic
+                    AssignmentCategory.PRODUCTIVITY -> R.color.category_productivity to R.drawable.ic_category_productivity
                 }
-                
-                root.setOnClickListener {
-                    onAssignmentClick(assignment)
-                }
+
+                cardCategoryIcon.setCardBackgroundColor(ContextCompat.getColor(root.context, categoryColor))
+                ivCategoryIcon.setImageResource(categoryIcon)
+
+                btnComplete.setOnClickListener { onAssignmentClick(assignment) }
+                btnDetails.setOnClickListener { onAssignmentClick(assignment) }
+                root.setOnClickListener { onAssignmentClick(assignment) }
             }
         }
+
+        private fun tintBackground(view: View, colorRes: Int) {
+            val background = view.background ?: return
+            val drawable = DrawableCompat.wrap(background.mutate())
+            DrawableCompat.setTint(drawable, ContextCompat.getColor(view.context, colorRes))
+            view.background = drawable
+        }
+
     }
 
     private class AssignmentDiffCallback : DiffUtil.ItemCallback<Assignment>() {

@@ -1,108 +1,166 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_assignment"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="12dp"
+    android:layout_marginBottom="16dp"
     app:cardBackgroundColor="@color/white"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="2dp">
+    app:cardCornerRadius="20dp"
+    app:cardElevation="0dp"
+    app:strokeColor="@color/card_stroke_default"
+    app:strokeWidth="2dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="20dp">
 
-        <!-- Header with Priority -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="12dp"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <!-- Priority Card -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/card_priority"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="12dp"
-                app:cardBackgroundColor="@color/priority_prime"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="0dp">
-
-                <TextView
-                    android:id="@+id/tv_priority"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingHorizontal="8dp"
-                    android:paddingVertical="4dp"
-                    android:text="Prime"
-                    android:textColor="@color/white"
-                    android:textSize="10sp"
-                    android:textStyle="bold" />
-
-            </androidx.cardview.widget.CardView>
-
-            <!-- Course -->
-            <TextView
-                android:id="@+id/tv_course"
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="CS 250 - Data Structures"
-                android:textColor="@color/gray_dark"
-                android:textSize="12sp" />
-
-            <!-- Points -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:layout_marginEnd="4dp"
-                    android:src="@drawable/ic_car"
-                    android:tint="@color/huzzler_red" />
+                <LinearLayout
+                    android:id="@+id/chip_priority"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_chip_label"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="4dp">
+
+                    <View
+                        android:id="@+id/view_priority_indicator"
+                        android:layout_width="8dp"
+                        android:layout_height="8dp"
+                        android:layout_marginEnd="6dp"
+                        android:background="@drawable/circle_red"
+                        android:importantForAccessibility="no"
+                        android:scaleX="1"
+                        android:scaleY="1" />
+
+                    <TextView
+                        android:id="@+id/tv_priority"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Prime"
+                        android:textColor="@color/huzzler_red"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <Space
+                    android:layout_width="10dp"
+                    android:layout_height="wrap_content" />
+
+                <LinearLayout
+                    android:id="@+id/chip_difficulty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_chip_label"
+                    android:gravity="center"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="4dp">
+
+                    <TextView
+                        android:id="@+id/tv_difficulty"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Medium"
+                        android:textColor="@color/difficulty_medium_text"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/container_points"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:orientation="vertical">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_category_icon"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="end"
+                    android:layout_marginBottom="6dp"
+                    android:padding="8dp"
+                    app:cardBackgroundColor="@color/category_academic"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp">
+
+                    <ImageView
+                        android:id="@+id/iv_category_icon"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:contentDescription="Category icon"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/ic_category_academic"
+                        android:tint="@color/white" />
+
+                </com.google.android.material.card.MaterialCardView>
 
                 <TextView
                     android:id="@+id/tv_points"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:gravity="end"
                     android:text="+150"
                     android:textColor="@color/huzzler_red"
-                    android:textSize="14sp"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
             </LinearLayout>
 
         </LinearLayout>
 
-        <!-- Assignment Title -->
         <TextView
             android:id="@+id/tv_assignment_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="4dp"
             android:text="Binary Search Tree Implementation"
             android:textColor="@color/black"
             android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:text="Binary Search Tree Implementation" />
 
-        <!-- Due Date and Time Left -->
+        <TextView
+            android:id="@+id/tv_course"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="CS 250 - Data Structures"
+            android:textColor="@color/gray_dark"
+            android:textSize="13sp" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_marginEnd="4dp"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_marginEnd="8dp"
                 android:src="@drawable/ic_schedule"
                 android:tint="@color/gray_dark" />
 
@@ -126,7 +184,6 @@
 
         </LinearLayout>
 
-        <!-- Action Buttons -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -134,32 +191,35 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_complete"
+                style="@style/Widget.Material3.Button"
                 android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_marginEnd="8dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="12dp"
                 android:layout_weight="1"
                 android:backgroundTint="@color/huzzler_red"
                 android:text="@string/complete"
+                android:textAllCaps="false"
                 android:textColor="@color/white"
-                android:textSize="12sp"
+                android:textSize="14sp"
                 android:textStyle="bold"
-                app:cornerRadius="8dp" />
+                app:cornerRadius="12dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_details"
+                style="@style/Widget.Material3.Button"
                 android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="8dp"
+                android:layout_height="48dp"
                 android:layout_weight="1"
                 android:backgroundTint="@color/gray_light"
                 android:text="@string/details"
+                android:textAllCaps="false"
                 android:textColor="@color/gray_dark"
-                android:textSize="12sp"
+                android:textSize="14sp"
                 android:textStyle="bold"
-                app:cornerRadius="8dp" />
+                app:cornerRadius="12dp" />
 
         </LinearLayout>
 
     </LinearLayout>
 
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

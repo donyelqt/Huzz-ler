@@ -4,99 +4,131 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/gray_very_light"
+    android:background="@color/gray_subtle"
+    android:clipToPadding="false"
+    android:paddingTop="8dp"
     tools:context=".ui.dashboard.DashboardFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:paddingHorizontal="16dp"
+        android:paddingBottom="24dp">
 
-        <!-- Header Card -->
-        <androidx.cardview.widget.CardView
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="24dp"
+            android:foregroundGravity="center_vertical"
+            android:padding="0dp"
             app:cardBackgroundColor="@color/huzzler_red"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="4dp">
+            app:cardCornerRadius="28dp"
+            app:cardElevation="8dp">
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="20dp">
+                android:minHeight="156dp"
+                android:padding="24dp">
 
-                <!-- User Info -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_user_avatar"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="30dp"
+                    app:cardElevation="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.5">
 
-                    <!-- User Avatar -->
                     <TextView
                         android:id="@+id/tv_user_avatar"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_marginBottom="8dp"
-                        android:background="@drawable/circle_white"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:gravity="center"
                         android:text="DA"
                         android:textColor="@color/huzzler_red"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tv_user_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
-                        android:text="Hello, Doniele Arys!"
-                        android:textColor="@color/white"
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/maximize_potential"
-                        android:textColor="@color/white"
-                        android:textSize="14sp" />
+                </com.google.android.material.card.MaterialCardView>
 
-                </LinearLayout>
+                <TextView
+                    android:id="@+id/tv_user_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="Hello, Doniele Arys!"
+                    android:textColor="@color/white"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toStartOf="@id/btn_notification"
+                    app:layout_constraintStart_toEndOf="@id/card_user_avatar"
+                    app:layout_constraintTop_toTopOf="@id/card_user_avatar" />
 
-                <!-- Notification Button -->
-                <ImageButton
+                <TextView
+                    android:id="@+id/tv_user_subtitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="6dp"
+                    android:text="@string/maximize_potential"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:lineSpacingExtra="2dp"
+                    app:layout_constraintEnd_toStartOf="@id/btn_notification"
+                    app:layout_constraintStart_toEndOf="@id/card_user_avatar"
+                    app:layout_constraintTop_toBottomOf="@id/tv_user_name"
+                    app:layout_constraintBottom_toBottomOf="@id/card_user_avatar" />
+
+                <com.google.android.material.card.MaterialCardView
                     android:id="@+id/btn_notification"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="@drawable/circle_white_transparent"
-                    android:contentDescription="Notifications"
-                    android:src="@drawable/ic_notifications"
-                    android:tint="@color/white" />
+                    android:layout_width="52dp"
+                    android:layout_height="52dp"
+                    android:padding="13dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackgroundBorderless"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="26dp"
+                    app:cardElevation="0dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent">
 
-            </LinearLayout>
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:contentDescription="@string/notifications"
+                        android:src="@drawable/ic_notifications"
+                        android:tint="@color/huzzler_red" />
 
-        </androidx.cardview.widget.CardView>
+                </com.google.android.material.card.MaterialCardView>
 
-        <!-- Stats Card -->
-        <androidx.cardview.widget.CardView
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
             app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="2dp">
+            app:cardCornerRadius="24dp"
+            app:cardElevation="6dp"
+            app:strokeWidth="0dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:baselineAligned="false"
                 android:orientation="horizontal"
-                android:padding="20dp">
+                android:paddingHorizontal="24dp"
+                android:paddingVertical="24dp">
 
-                <!-- Points -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -110,19 +142,25 @@
                         android:layout_height="wrap_content"
                         android:text="1,240"
                         android:textColor="@color/black"
-                        android:textSize="24sp"
+                        android:textSize="28sp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
                         android:text="@string/points"
                         android:textColor="@color/gray_dark"
                         android:textSize="12sp" />
 
                 </LinearLayout>
 
-                <!-- Streak -->
+                <com.google.android.material.divider.MaterialDivider
+                    android:layout_width="1dp"
+                    android:layout_height="48dp"
+                    android:layout_marginHorizontal="20dp"
+                    app:dividerColor="@color/gray_stroke" />
+
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -136,19 +174,25 @@
                         android:layout_height="wrap_content"
                         android:text="3"
                         android:textColor="@color/huzzler_red"
-                        android:textSize="24sp"
+                        android:textSize="28sp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
                         android:text="@string/streak"
                         android:textColor="@color/gray_dark"
                         android:textSize="12sp" />
 
                 </LinearLayout>
 
-                <!-- Prime Rate -->
+                <com.google.android.material.divider.MaterialDivider
+                    android:layout_width="1dp"
+                    android:layout_height="48dp"
+                    android:layout_marginHorizontal="20dp"
+                    app:dividerColor="@color/gray_stroke" />
+
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -162,12 +206,13 @@
                         android:layout_height="wrap_content"
                         android:text="87%"
                         android:textColor="@color/green"
-                        android:textSize="24sp"
+                        android:textSize="28sp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
                         android:text="@string/prime_rate"
                         android:textColor="@color/gray_dark"
                         android:textSize="12sp" />
@@ -176,13 +221,13 @@
 
             </LinearLayout>
 
-        </androidx.cardview.widget.CardView>
+        </com.google.android.material.card.MaterialCardView>
 
-        <!-- Assignments Section -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="12dp"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <TextView
@@ -194,30 +239,41 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/tv_view_all"
+            <LinearLayout
+                android:id="@+id/container_view_all"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_view_all"
-                android:paddingHorizontal="12dp"
-                android:paddingVertical="6dp"
-                android:text="@string/view_all"
-                android:textColor="@color/huzzler_red"
-                android:textSize="12sp"
-                android:textStyle="bold" />
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginEnd="6dp"
+                    android:src="@drawable/ic_notifications"
+                    android:tint="@color/huzzler_red" />
+
+                <TextView
+                    android:id="@+id/tv_view_all"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/view_all"
+                    android:textColor="@color/huzzler_red"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
-        <!-- Assignments RecyclerView -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_assignments"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:nestedScrollingEnabled="false"
+            android:overScrollMode="never"
             tools:itemCount="2"
             tools:listitem="@layout/item_assignment" />
 
-        <!-- Loading Progress -->
         <ProgressBar
             android:id="@+id/progress_bar"
             android:layout_width="wrap_content"
