@@ -40,7 +40,6 @@
     
     <!-- Status Colors -->
     <color name="green">#4CAF50</color>
-    <color name="yellow">#FFC107</color>
     <color name="orange">#FF9800</color>
     <color name="green_dark">#1E8737</color>
     <color name="yellow_dark">#F59E0B</color>
@@ -51,6 +50,7 @@
     <color name="card_shadow">#1A000000</color>
     <color name="card_surface">#FAFAFA</color>
     <color name="card_stroke_default">#E0E3EB</color>
+    <color name="card_glass_overlay">#0D1F1F33</color>
 
     <!-- Priority Colors -->
     <color name="priority_prime">#4CAF50</color>
@@ -75,12 +75,12 @@
     <color name="category_academic">#2563EB</color>
     <color name="category_productivity">#10B981</color>
     <color name="category_icon_bg">#1FFFFFFF</color>
-    
+    <color name="category_icon_shadow">#0D000000</color>
+
     <!-- Game Colors -->
     <color name="valorant_red">#FF4654</color>
     <color name="mlbb_purple">#6B46C1</color>
     <color name="academic_blue">#3B82F6</color>
-    
     <!-- Legacy Colors -->
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>

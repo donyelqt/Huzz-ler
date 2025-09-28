@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -55,11 +56,12 @@ class AssignmentAdapter(
                     AssignmentPriority.LOW -> Triple("Low", R.color.priority_low, R.color.priority_low_light)
                 }
 
+                val priorityColorInt = ContextCompat.getColor(root.context, priorityColor)
                 tvPriority.text = priorityLabel
-                tvPriority.setTextColor(ContextCompat.getColor(root.context, priorityColor))
+                tvPriority.setTextColor(priorityColorInt)
                 tintBackground(chipPriority, priorityBg)
                 tintBackground(viewPriorityIndicator, priorityColor)
-                cardAssignment.strokeColor = ContextCompat.getColor(root.context, priorityColor)
+                cardAssignment.cardElevation = 0f
 
                 val (difficultyLabel, difficultyTextColor, difficultyBgColor) = when (assignment.difficulty) {
                     AssignmentDifficulty.EASY -> Triple("Easy", R.color.difficulty_easy_text, R.color.difficulty_easy_bg)
@@ -71,14 +73,23 @@ class AssignmentAdapter(
                 tvDifficulty.setTextColor(ContextCompat.getColor(root.context, difficultyTextColor))
                 tintBackground(chipDifficulty, difficultyBgColor)
 
-                val (categoryColor, categoryIcon) = when (assignment.category) {
-                    AssignmentCategory.GAMING -> R.color.category_gaming to R.drawable.ic_category_gaming
-                    AssignmentCategory.ACADEMIC -> R.color.category_academic to R.drawable.ic_category_academic
-                    AssignmentCategory.PRODUCTIVITY -> R.color.category_productivity to R.drawable.ic_category_productivity
+                val (categoryColor, categoryIcon, accentColor) = when (assignment.category) {
+                    AssignmentCategory.GAMING -> Triple(R.color.category_gaming, R.drawable.ic_category_gaming, R.color.category_gaming)
+                    AssignmentCategory.ACADEMIC -> Triple(R.color.category_academic, R.drawable.ic_category_academic, R.color.category_academic)
+                    AssignmentCategory.PRODUCTIVITY -> Triple(R.color.category_productivity, R.drawable.ic_category_productivity, R.color.category_productivity)
                 }
 
-                cardCategoryIcon.setCardBackgroundColor(ContextCompat.getColor(root.context, categoryColor))
+                val categoryColorInt = ContextCompat.getColor(root.context, categoryColor)
+                cardCategoryIcon.setCardBackgroundColor(categoryColorInt)
                 ivCategoryIcon.setImageResource(categoryIcon)
+                tvPoints.setTextColor(categoryColorInt)
+
+                ivGlowAccent.apply {
+                    setImageResource(R.drawable.circle_white_transparent)
+                    DrawableCompat.setTint(DrawableCompat.wrap(drawable), ContextCompat.getColor(root.context, accentColor))
+                    alpha = 0.2f
+                    isVisible = true
+                }
 
                 btnComplete.setOnClickListener { onAssignmentClick(assignment) }
                 btnDetails.setOnClickListener { onAssignmentClick(assignment) }

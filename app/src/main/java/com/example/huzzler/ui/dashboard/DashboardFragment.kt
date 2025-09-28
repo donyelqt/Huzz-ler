@@ -35,7 +35,10 @@ class DashboardFragment : Fragment() {
         setupRecyclerView()
         setupObservers()
         setupClickListeners()
-        
+    }
+
+    override fun onResume() {
+        super.onResume()
         viewModel.loadDashboardData()
     }
 
@@ -46,8 +49,13 @@ class DashboardFragment : Fragment() {
         }
         
         binding.rvAssignments.apply {
-            layoutManager = LinearLayoutManager(requireContext())
+            layoutManager = object : LinearLayoutManager(requireContext()) {
+                override fun canScrollVertically(): Boolean = false
+            }
             adapter = assignmentAdapter
+            setHasFixedSize(false)
+            itemAnimator = null
+            isNestedScrollingEnabled = false
         }
     }
 
