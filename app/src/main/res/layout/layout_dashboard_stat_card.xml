@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:foregroundGravity="center"
+    android:padding="0dp"
+    app:cardBackgroundColor="@android:color/transparent"
+    app:cardCornerRadius="24dp"
+    app:cardElevation="0dp"
+    app:strokeColor="@color/dashboard_stat_border"
+    app:strokeWidth="1dp">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/content_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="120dp"
+            android:background="@drawable/stat_card_glass_bg"
+            android:clipToPadding="false"
+            android:orientation="vertical"
+            android:paddingHorizontal="20dp"
+            android:paddingTop="18dp"
+            android:paddingBottom="20dp">
+
+            <LinearLayout
+                android:id="@+id/header_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/stat_card_label_capsule"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="6dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <View
+                    android:id="@+id/view_accent"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/circle_white_transparent" />
+
+                <TextView
+                    android:id="@+id/tv_stat_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:text="LABEL"
+                    android:textColor="@color/white"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:alpha="0.82"
+                    android:letterSpacing="0.1" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_stat_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="0"
+                android:textColor="@color/white"
+                android:textSize="32sp"
+                android:textStyle="bold"
+                android:letterSpacing="-0.01"
+                android:maxLines="1" />
+
+            <TextView
+                android:id="@+id/tv_stat_caption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Caption"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                android:letterSpacing="0.02"
+                android:maxLines="1"
+                android:ellipsize="end" />
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/glow_overlay"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:layout_gravity="end|top"
+            android:layout_marginTop="-74dp"
+            android:layout_marginEnd="-60dp"
+            android:background="@drawable/stat_card_glow_blob"
+            android:alpha="0.48" />
+
+    </FrameLayout>
+
+</com.google.android.material.card.MaterialCardView>

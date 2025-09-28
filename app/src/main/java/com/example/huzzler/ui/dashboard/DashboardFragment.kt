@@ -4,12 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.huzzler.R
 import com.example.huzzler.databinding.FragmentDashboardBinding
+import com.example.huzzler.databinding.LayoutDashboardStatCardBinding
 import com.example.huzzler.ui.dashboard.adapter.AssignmentAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.Locale
 
 @AndroidEntryPoint
 class DashboardFragment : Fragment() {
@@ -27,6 +31,26 @@ class DashboardFragment : Fragment() {
     ): View {
         _binding = FragmentDashboardBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    private fun bindStatCard(
+        statCardBinding: LayoutDashboardStatCardBinding,
+        value: String,
+        labelRes: Int,
+        caption: String,
+        accentColorRes: Int
+    ) {
+        statCardBinding.apply {
+            tvStatValue.text = value
+            tvStatLabel.text = getString(labelRes).uppercase(Locale.getDefault())
+            tvStatCaption.text = caption
+
+            val accentColor = ContextCompat.getColor(requireContext(), accentColorRes)
+            viewAccent.backgroundTintList = android.content.res.ColorStateList.valueOf(accentColor)
+            tvStatValue.setTextColor(accentColor)
+            tvStatLabel.setTextColor(accentColor)
+            tvStatCaption.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -63,10 +87,31 @@ class DashboardFragment : Fragment() {
         viewModel.user.observe(viewLifecycleOwner) { user ->
             binding.apply {
                 tvUserName.text = user.name.ifEmpty { "Doniele Arys" }
-                tvPoints.text = user.points.toString()
-                tvStreak.text = user.streak.toString()
-                tvPrimeRate.text = "${user.primeRate}%"
             }
+
+            bindStatCard(
+                LayoutDashboardStatCardBinding.bind(binding.includePoints.root),
+                user.points.toString(),
+                R.string.metric_points,
+                getString(R.string.available_points),
+                R.color.dashboard_stat_accent_points
+            )
+
+            bindStatCard(
+                LayoutDashboardStatCardBinding.bind(binding.includeStreak.root),
+                user.streak.toString(),
+                R.string.metric_day_streak,
+                getString(R.string.streak),
+                R.color.dashboard_stat_accent_streak
+            )
+
+            bindStatCard(
+                LayoutDashboardStatCardBinding.bind(binding.includePrimeRate.root),
+                "${user.primeRate}%",
+                R.string.metric_prime_rate,
+                getString(R.string.prime_rate),
+                R.color.dashboard_stat_accent_prime
+            )
         }
 
         viewModel.assignments.observe(viewLifecycleOwner) { assignments ->

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+
+    <size
+        android:width="200dp"
+        android:height="200dp" />
+
+    <gradient
+        android:type="radial"
+        android:gradientRadius="120dp"
+        android:centerColor="@color/dashboard_stat_glass_overlay"
+        android:endColor="@android:color/transparent" />
+</shape>

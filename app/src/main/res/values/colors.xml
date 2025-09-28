@@ -52,6 +52,14 @@
     <color name="card_stroke_default">#E0E3EB</color>
     <color name="card_glass_overlay">#0D1F1F33</color>
 
+    <!-- Dashboard Stat Palette -->
+    <color name="dashboard_stat_surface">#0DFFFFFF</color>
+    <color name="dashboard_stat_border">#1AFFFFFF</color>
+    <color name="dashboard_stat_glass_overlay">#1AFF1F1F</color>
+    <color name="dashboard_stat_accent_points">#FFE57373</color>
+    <color name="dashboard_stat_accent_streak">#FFFF8A50</color>
+    <color name="dashboard_stat_accent_prime">#FF4CAF50</color>
+
     <!-- Priority Colors -->
     <color name="priority_prime">#4CAF50</color>
     <color name="priority_gotta_do">#FFC107</color>
