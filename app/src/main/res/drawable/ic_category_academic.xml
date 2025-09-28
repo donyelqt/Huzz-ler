@@ -6,11 +6,11 @@
     android:viewportHeight="24">
     <path
         android:fillColor="@android:color/white"
-        android:pathData="M4,5h16l-8,14z" />
-    <path
-        android:fillColor="@color/category_icon_bg"
-        android:pathData="M12,9.5l4,2.5 -4,2.5 -4,-2.5z" />
+        android:pathData="M5,13.18v2.52c0,0.43 0.27,0.81 0.67,0.94L12,19.5l6.33,-2.86c0.4,-0.18 0.67,-0.55 0.67,-0.98v-2.48L12,15.5 5,13.18z" />
     <path
         android:fillColor="@android:color/white"
-        android:pathData="M10.5,11.25h3v4.5h-3z" />
+        android:pathData="M12,2 3,6.5 12,11l9,-4.5L12,2z" />
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M12,12.82 6.24,10.4 12,7.45l5.76,2.95L12,12.82z" />
 </vector>
