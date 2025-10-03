@@ -132,7 +132,7 @@
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:layout_marginEnd="8dp"
-                            android:src="@drawable/ic_schedule"
+                            android:src="@drawable/ic_rewards"
                             android:tint="@color/ai_pink" />
 
                         <LinearLayout
@@ -172,7 +172,7 @@
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:layout_marginEnd="8dp"
-                            android:src="@drawable/ic_rewards"
+                            android:src="@drawable/ic_schedule"
                             android:tint="@color/ai_pink" />
 
                         <LinearLayout

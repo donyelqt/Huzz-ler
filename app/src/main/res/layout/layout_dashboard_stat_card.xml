@@ -32,29 +32,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/stat_card_label_capsule"
+                android:gravity="center"
+                android:orientation="horizontal"
                 android:paddingHorizontal="12dp"
-                android:paddingVertical="6dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:paddingVertical="6dp">
 
-                <View
-                    android:id="@+id/view_accent"
-                    android:layout_width="10dp"
-                    android:layout_height="10dp"
-                    android:layout_marginEnd="8dp"
-                    android:background="@drawable/circle_white_transparent" />
-
-                <TextView
-                    android:id="@+id/tv_stat_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:maxLines="1"
-                    android:text="LABEL"
-                    android:textColor="@color/white"
-                    android:textSize="11sp"
-                    android:textStyle="bold"
-                    android:alpha="0.82"
-                    android:letterSpacing="0.1" />
+                <ImageView
+                    android:id="@+id/iv_stat_icon"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:contentDescription="@null"
+                    android:scaleType="centerInside"
+                    android:tint="@color/white" />
             </LinearLayout>
 
             <TextView

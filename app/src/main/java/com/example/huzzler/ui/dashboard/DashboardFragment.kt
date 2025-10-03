@@ -13,7 +13,6 @@ import com.example.huzzler.databinding.FragmentDashboardBinding
 import com.example.huzzler.databinding.LayoutDashboardStatCardBinding
 import com.example.huzzler.ui.dashboard.adapter.AssignmentAdapter
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.Locale
 
 @AndroidEntryPoint
 class DashboardFragment : Fragment() {
@@ -36,19 +35,18 @@ class DashboardFragment : Fragment() {
     private fun bindStatCard(
         statCardBinding: LayoutDashboardStatCardBinding,
         value: String,
-        labelRes: Int,
-        caption: String,
-        accentColorRes: Int
+        @androidx.annotation.DrawableRes iconRes: Int,
+        @androidx.annotation.StringRes captionRes: Int,
+        @androidx.annotation.ColorRes accentColorRes: Int
     ) {
         statCardBinding.apply {
             tvStatValue.text = value
-            tvStatLabel.text = getString(labelRes).uppercase(Locale.getDefault())
-            tvStatCaption.text = caption
+            tvStatCaption.text = getString(captionRes)
+            ivStatIcon.setImageResource(iconRes)
 
             val accentColor = ContextCompat.getColor(requireContext(), accentColorRes)
-            viewAccent.backgroundTintList = android.content.res.ColorStateList.valueOf(accentColor)
             tvStatValue.setTextColor(accentColor)
-            tvStatLabel.setTextColor(accentColor)
+            ivStatIcon.imageTintList = android.content.res.ColorStateList.valueOf(accentColor)
             tvStatCaption.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
         }
     }
@@ -92,24 +90,24 @@ class DashboardFragment : Fragment() {
             bindStatCard(
                 LayoutDashboardStatCardBinding.bind(binding.includePoints.root),
                 user.points.toString(),
+                R.drawable.ic_points,
                 R.string.metric_points,
-                getString(R.string.available_points),
                 R.color.dashboard_stat_accent_points
             )
 
             bindStatCard(
                 LayoutDashboardStatCardBinding.bind(binding.includeStreak.root),
                 user.streak.toString(),
+                R.drawable.ic_schedule,
                 R.string.metric_day_streak,
-                getString(R.string.streak),
                 R.color.dashboard_stat_accent_streak
             )
 
             bindStatCard(
                 LayoutDashboardStatCardBinding.bind(binding.includePrimeRate.root),
                 "${user.primeRate}%",
+                R.drawable.ic_rewards,
                 R.string.metric_prime_rate,
-                getString(R.string.prime_rate),
                 R.color.dashboard_stat_accent_prime
             )
         }
