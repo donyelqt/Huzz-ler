@@ -55,7 +55,7 @@ import androidx.compose.ui.unit.dp
 import com.example.huzzler.R
 import com.example.huzzler.data.model.Reward
 import com.example.huzzler.data.model.RewardCategory
-gi
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RewardsScreen(
