@@ -7,12 +7,33 @@ import com.example.huzzler.data.model.RewardCategory
 import com.example.huzzler.data.model.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+/**
+ * Sealed interface for one-time UI events
+ * Following event-driven architecture best practices
+ */
+sealed interface RewardEvent {
+    data class RedemptionSuccess(
+        val rewardTitle: String,
+        val pointsDeducted: Int,
+        val remainingPoints: Int
+    ) : RewardEvent
+    
+    data class RedemptionError(
+        val message: String,
+        val requiredPoints: Int,
+        val currentPoints: Int
+    ) : RewardEvent
+}
 
 @HiltViewModel
 class RewardsViewModel @Inject constructor() : ViewModel() {
@@ -21,6 +42,11 @@ class RewardsViewModel @Inject constructor() : ViewModel() {
 
     private val _uiState = MutableStateFlow(RewardsUiState())
     val uiState: StateFlow<RewardsUiState> = _uiState.asStateFlow()
+    
+    // SharedFlow for one-time events (like toasts)
+    // replay = 0 ensures events are only delivered once
+    private val _events = MutableSharedFlow<RewardEvent>(replay = 0)
+    val events: SharedFlow<RewardEvent> = _events.asSharedFlow()
 
     init {
         loadRewards()
@@ -120,18 +146,60 @@ class RewardsViewModel @Inject constructor() : ViewModel() {
         }
     }
 
+    /**
+     * Handles reward redemption with comprehensive validation and user feedback
+     * Emits success or error events for UI to display toast notifications
+     */
     fun onRewardClicked(reward: Reward) {
-        // Handle reward redemption
-        val currentUser = _uiState.value.user ?: return
-        if (currentUser.points >= reward.pointsCost) {
-            // Simulate redemption
-            val updatedUser = currentUser.copy(points = currentUser.points - reward.pointsCost)
+        viewModelScope.launch {
+            val currentUser = _uiState.value.user
+            
+            // Guard: Check if user data is loaded
+            if (currentUser == null) {
+                _events.emit(
+                    RewardEvent.RedemptionError(
+                        message = "Unable to process redemption. Please try again.",
+                        requiredPoints = reward.pointsCost,
+                        currentPoints = 0
+                    )
+                )
+                return@launch
+            }
+            
+            // Validate: Check if user has sufficient points
+            if (currentUser.points < reward.pointsCost) {
+                val deficit = reward.pointsCost - currentUser.points
+                _events.emit(
+                    RewardEvent.RedemptionError(
+                        message = "Insufficient points! You need $deficit more points to redeem this reward.",
+                        requiredPoints = reward.pointsCost,
+                        currentPoints = currentUser.points
+                    )
+                )
+                return@launch
+            }
+            
+            // Process redemption
+            val updatedUser = currentUser.copy(
+                points = currentUser.points - reward.pointsCost
+            )
+            
+            // Update state
             _uiState.update {
                 it.copy(
                     user = updatedUser,
                     rewards = filterRewards(it.selectedCategory)
                 )
             }
+            
+            // Emit success event
+            _events.emit(
+                RewardEvent.RedemptionSuccess(
+                    rewardTitle = reward.title,
+                    pointsDeducted = reward.pointsCost,
+                    remainingPoints = updatedUser.points
+                )
+            )
         }
     }
 }
