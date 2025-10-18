@@ -87,26 +87,24 @@ private fun RewardsScreenWithErrorHandling(
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     
-    // Track current event for custom snackbar display
-    var currentEvent by remember { mutableStateOf<RewardEvent?>(null) }
-    
     // Collect one-time events and display modern snackbar notifications
     LaunchedEffect(Unit) {
         viewModel.events.collect { event ->
-            currentEvent = event
             scope.launch {
                 when (event) {
                     is RewardEvent.RedemptionSuccess -> {
+                        // Encode event data with type prefix to prevent race conditions
                         snackbarHostState.showSnackbar(
-                            message = event.rewardTitle,
+                            message = "SUCCESS|${event.rewardTitle}|${event.pointsDeducted}|${event.remainingPoints}",
                             actionLabel = "SUCCESS",
                             duration = androidx.compose.material3.SnackbarDuration.Short
                         )
                     }
                     
                     is RewardEvent.RedemptionError -> {
+                        // Encode error message with type prefix
                         snackbarHostState.showSnackbar(
-                            message = event.message,
+                            message = "ERROR|${event.message}",
                             actionLabel = "ERROR",
                             duration = androidx.compose.material3.SnackbarDuration.Long
                         )
@@ -146,7 +144,7 @@ private fun RewardsScreenWithErrorHandling(
                 .padding(16.dp)
         ) { data ->
             ModernSnackbar(
-                event = currentEvent,
+                snackbarData = data.visuals.message,
                 isSuccess = data.visuals.actionLabel == "SUCCESS"
             )
         }
@@ -161,29 +159,37 @@ private fun RewardsScreenWithErrorHandling(
  * - Icon-first visual hierarchy with Material Icons Rounded
  * - High contrast typography with subtle opacity variations
  * - Compact, information-dense layout
+ * - Race-condition safe with encoded event data
  */
 @Composable
 private fun ModernSnackbar(
-    event: RewardEvent?,
+    snackbarData: String,
     isSuccess: Boolean
 ) {
+    // Parse encoded data to prevent race conditions
+    val parts = snackbarData.split("|")
+    val eventType = parts.getOrNull(0) ?: "ERROR"
+    
+    // Determine state from encoded data (reliable source of truth)
+    val actualIsSuccess = eventType == "SUCCESS"
+    
     // 2025 trend: Vibrant, accessible semantic colors
-    val containerColor = if (isSuccess) {
+    val containerColor = if (actualIsSuccess) {
         Color(0xFF10B981) // Emerald green - success
     } else {
         Color(0xFFEF4444) // Rose red - error
     }
     
-    val (title, message) = when (event) {
-        is RewardEvent.RedemptionSuccess -> {
-            "Redeemed!" to "${event.rewardTitle} • ${event.remainingPoints} pts left"
-        }
-        is RewardEvent.RedemptionError -> {
-            "Failed" to event.message
-        }
-        null -> {
-            "Notification" to "Processing..."
-        }
+    val (title, message) = if (actualIsSuccess && parts.size >= 4) {
+        // SUCCESS|rewardTitle|pointsDeducted|remainingPoints
+        val rewardTitle = parts[1]
+        val remainingPoints = parts[3]
+        "Redeemed!" to "$rewardTitle • $remainingPoints pts left"
+    } else if (!actualIsSuccess && parts.size >= 2) {
+        // ERROR|errorMessage
+        "Failed" to parts[1]
+    } else {
+        "Notification" to "Processing..."
     }
     
     // Custom Surface-based snackbar to avoid Snackbar API constraints
@@ -198,9 +204,9 @@ private fun ModernSnackbar(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp)
         ) {
-            // Leading icon with semantic meaning
+            // Leading icon with semantic meaning (uses parsed data for accuracy)
             Icon(
-                imageVector = if (isSuccess) Icons.Rounded.CheckCircle else Icons.Rounded.Error,
+                imageVector = if (actualIsSuccess) Icons.Rounded.CheckCircle else Icons.Rounded.Error,
                 contentDescription = null,
                 modifier = Modifier.size(22.dp),
                 tint = Color.White
