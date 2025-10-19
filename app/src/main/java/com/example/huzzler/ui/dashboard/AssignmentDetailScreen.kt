@@ -140,34 +140,69 @@ fun AssignmentDetailScreen(
             }
         }
         
-        // Floating Action Button (positioned higher for better visibility)
+        // Floating Action Button with motivational subtext
         if (assignment.status != AssignmentStatus.COMPLETED) {
-            ExtendedFloatingActionButton(
-                onClick = { onComplete(assignment) },
+            Column(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(start = 24.dp, end = 24.dp, bottom = 100.dp, top = 24.dp),
-                icon = {
-                    Icon(
-                        imageVector = Icons.Rounded.CheckCircle,
-                        contentDescription = null
-                    )
-                },
-                text = { 
-                    Text(
-                        "Mark Complete",
-                        style = MaterialTheme.typography.labelLarge.copy(
-                            fontWeight = FontWeight.Bold
+                horizontalAlignment = Alignment.End,
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                ExtendedFloatingActionButton(
+                    onClick = { onComplete(assignment) },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Rounded.CheckCircle,
+                            contentDescription = null,
+                            modifier = Modifier.size(24.dp)
                         )
+                    },
+                    text = { 
+                        Text(
+                            "Complete Assignment",
+                            style = MaterialTheme.typography.labelLarge.copy(
+                                fontWeight = FontWeight.Bold,
+                                letterSpacing = 0.5.sp
+                            )
+                        )
+                    },
+                    containerColor = Color(0xFF10B981), // Success green - clear completion action
+                    contentColor = Color.White,
+                    elevation = androidx.compose.material3.FloatingActionButtonDefaults.elevation(
+                        defaultElevation = 8.dp,
+                        pressedElevation = 12.dp,
+                        hoveredElevation = 10.dp
                     )
-                },
-                containerColor = huzzlerRed,
-                contentColor = Color.White,
-                elevation = androidx.compose.material3.FloatingActionButtonDefaults.elevation(
-                    defaultElevation = 8.dp,
-                    pressedElevation = 12.dp
                 )
-            )
+                
+                // Motivational subtext
+                Surface(
+                    shape = RoundedCornerShape(12.dp),
+                    color = Color.White.copy(alpha = 0.95f),
+                    shadowElevation = 4.dp
+                ) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Rounded.Stars,
+                            contentDescription = null,
+                            modifier = Modifier.size(16.dp),
+                            tint = Color(0xFFF59E0B) // Gold color for points
+                        )
+                        Text(
+                            text = "Tap to earn +${assignment.points} points",
+                            style = MaterialTheme.typography.labelMedium.copy(
+                                fontWeight = FontWeight.SemiBold
+                            ),
+                            color = Color(0xFF000000)
+                        )
+                    }
+                }
+            }
         }
     }
 }
