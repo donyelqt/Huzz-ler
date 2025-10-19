@@ -26,6 +26,7 @@ import androidx.compose.material.icons.rounded.CalendarToday
 import androidx.compose.material.icons.rounded.Category
 import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material.icons.rounded.Description
+import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.material.icons.rounded.School
 import androidx.compose.material.icons.rounded.SignalCellularAlt
 import androidx.compose.material.icons.rounded.Stars
@@ -176,7 +177,7 @@ fun AssignmentDetailScreen(
                     )
                 )
                 
-                // Motivational subtext
+                // Motivational subtext with arrow pointing to button
                 Surface(
                     shape = RoundedCornerShape(12.dp),
                     color = Color.White.copy(alpha = 0.95f),
@@ -187,6 +188,13 @@ fun AssignmentDetailScreen(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
+                        // Arrow up icon pointing to button
+                        Icon(
+                            imageVector = Icons.Rounded.KeyboardArrowUp,
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp),
+                            tint = Color(0xFF10B981) // Match button color
+                        )
                         Icon(
                             imageVector = Icons.Rounded.Stars,
                             contentDescription = null,
