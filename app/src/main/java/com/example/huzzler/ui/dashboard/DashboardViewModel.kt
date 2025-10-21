@@ -108,7 +108,7 @@ class DashboardViewModel @Inject constructor() : ViewModel() {
                     difficulty = AssignmentDifficulty.MEDIUM,
                     category = AssignmentCategory.GAMING,
                     status = AssignmentStatus.PENDING,
-                    submissionType = SubmissionType.COMPLETE_ONLY
+                    submissionType = SubmissionType.REQUIRES_SUBMISSION
                 ),
                 Assignment(
                     id = "2",
@@ -121,7 +121,7 @@ class DashboardViewModel @Inject constructor() : ViewModel() {
                     difficulty = AssignmentDifficulty.MEDIUM,
                     category = AssignmentCategory.ACADEMIC,
                     status = AssignmentStatus.PENDING,
-                    submissionType = SubmissionType.COMPLETE_ONLY
+                    submissionType = SubmissionType.REQUIRES_SUBMISSION
                 ),
                 Assignment(
                     id = "3",

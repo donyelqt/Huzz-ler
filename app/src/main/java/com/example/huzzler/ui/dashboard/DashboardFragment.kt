@@ -223,7 +223,13 @@ class DashboardFragment : Fragment() {
                 onSubmitComplete = { submittedAssignment ->
                     // Complete assignment and show custom success snackbar
                     viewModel.completeAssignment(submittedAssignment)
-                    showSuccessSnackbar("Assignment completed! +${submittedAssignment.points} points earned! 🎉")
+                    // Get current total points from user
+                    val currentTotal = viewModel.user.value?.points ?: 0
+                    showSuccessSnackbar(
+                        title = "Assignment Completed!",
+                        points = submittedAssignment.points,
+                        total = currentTotal + submittedAssignment.points
+                    )
                 }
             )
             dialog.show(childFragmentManager, "AssignmentSubmissionDialog")
