@@ -37,6 +37,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.huzzler.R
 import com.example.huzzler.data.model.Assignment
@@ -110,13 +111,10 @@ class DashboardFragment : Fragment() {
         )
         
         binding.rvAssignments.apply {
-            layoutManager = object : LinearLayoutManager(requireContext()) {
-                override fun canScrollVertically(): Boolean = false
-            }
+            layoutManager = LinearLayoutManager(requireContext())
             adapter = assignmentAdapter
-            setHasFixedSize(false)
+            setHasFixedSize(true)
             itemAnimator = null
-            isNestedScrollingEnabled = false
         }
     }
 
@@ -187,7 +185,7 @@ class DashboardFragment : Fragment() {
     private fun setupClickListeners() {
         binding.apply {
             tvViewAll.setOnClickListener {
-                // Navigate to all assignments (future implementation)
+                showAllAssignments()
             }
             
             btnNotification.setOnClickListener {
@@ -221,15 +219,8 @@ class DashboardFragment : Fragment() {
             val dialog = AssignmentSubmissionDialog.newInstance(
                 assignment = assignment,
                 onSubmitComplete = { submittedAssignment ->
-                    // Complete assignment and show custom success snackbar
+                    // Complete assignment - ViewModel will emit event that shows snackbar
                     viewModel.completeAssignment(submittedAssignment)
-                    // Get current total points from user
-                    val currentTotal = viewModel.user.value?.points ?: 0
-                    showSuccessSnackbar(
-                        title = "Assignment Completed!",
-                        points = submittedAssignment.points,
-                        total = currentTotal + submittedAssignment.points
-                    )
                 }
             )
             dialog.show(childFragmentManager, "AssignmentSubmissionDialog")
@@ -239,12 +230,23 @@ class DashboardFragment : Fragment() {
         }
     }
     
+    private fun showAllAssignments() {
+        try {
+            // Navigate to AllAssignmentsFragment using Navigation Component
+            // Using destination ID directly (works without rebuild)
+            findNavController().navigate(R.id.navigation_all_assignments)
+        } catch (e: Exception) {
+            android.util.Log.e("DashboardFragment", "Error navigating to all assignments", e)
+            showErrorSnackbar("Failed to open all assignments")
+        }
+    }
+    
     private fun showNotifications(notifications: List<com.example.huzzler.data.model.Notification>) {
         try {
-            val dialog = NotificationsDialog.newInstance(notifications)
-            dialog.show(childFragmentManager, "NotificationsDialog")
+            // Navigate to NotificationsFragment using Navigation Component (2025 Best Practice)
+            findNavController().navigate(R.id.navigation_notifications)
         } catch (e: Exception) {
-            android.util.Log.e("DashboardFragment", "Error showing notifications", e)
+            android.util.Log.e("DashboardFragment", "Error navigating to notifications", e)
             showErrorSnackbar("Failed to open notifications")
         }
     }

@@ -9,7 +9,27 @@
         android:id="@+id/navigation_dashboard"
         android:name="com.example.huzzler.ui.dashboard.DashboardFragment"
         android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_dashboard">
+        
+        <action
+            android:id="@+id/action_dashboard_to_all_assignments"
+            app:destination="@id/navigation_all_assignments"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
+    
+    <fragment
+        android:id="@+id/navigation_all_assignments"
+        android:name="com.example.huzzler.ui.dashboard.AllAssignmentsFragment"
+        android:label="All Assignments"
+        tools:layout="@layout/fragment_all_assignments" />
+    
+    <fragment
+        android:id="@+id/navigation_notifications"
+        android:name="com.example.huzzler.ui.dashboard.NotificationsFragment"
+        android:label="Notifications" />
 
     <fragment
         android:id="@+id/navigation_rewards"

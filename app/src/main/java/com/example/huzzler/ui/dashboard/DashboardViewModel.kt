@@ -67,6 +67,19 @@ class DashboardViewModel @Inject constructor() : ViewModel() {
     
     // Store notifications for demo
     private val mockNotifications = mutableListOf<Notification>()
+    
+    // LiveData for notifications (observable for NotificationsFragment)
+    private val _notifications = MutableLiveData<List<Notification>>()
+    val notifications: LiveData<List<Notification>> = _notifications
+    
+    // Method to mark notification as read
+    fun markNotificationAsRead(notificationId: String) {
+        val index = mockNotifications.indexOfFirst { it.id == notificationId }
+        if (index != -1) {
+            mockNotifications[index] = mockNotifications[index].copy(isRead = true)
+            _notifications.value = mockNotifications.toList()
+        }
+    }
 
     fun loadDashboardData() {
         viewModelScope.launch {
@@ -291,5 +304,8 @@ class DashboardViewModel @Inject constructor() : ViewModel() {
                 isRead = true
             )
         )
+        
+        // Update LiveData
+        _notifications.value = mockNotifications.toList()
     }
 }

@@ -1,5 +1,6 @@
 package com.example.huzzler.ui.dashboard.adapter
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,7 @@ import com.example.huzzler.data.model.Assignment
 import com.example.huzzler.data.model.AssignmentCategory
 import com.example.huzzler.data.model.AssignmentDifficulty
 import com.example.huzzler.data.model.AssignmentPriority
+import com.example.huzzler.data.model.AssignmentStatus
 import com.example.huzzler.data.model.SubmissionType
 import com.example.huzzler.databinding.ItemAssignmentBinding
 import java.text.SimpleDateFormat
@@ -46,7 +48,15 @@ class AssignmentAdapter(
                 tvAssignmentTitle.text = assignment.title
                 tvCourse.text = assignment.course
                 tvPoints.text = "+${assignment.points}"
-                tvTimeLeft.text = root.context.getString(R.string.time_left, assignment.timeLeft)
+                
+                // Show different text based on status
+                if (assignment.status == AssignmentStatus.COMPLETED) {
+                    tvTimeLeft.text = "✓ Completed"
+                    tvTimeLeft.setTextColor(ContextCompat.getColor(root.context, R.color.green))
+                } else {
+                    tvTimeLeft.text = root.context.getString(R.string.time_left, assignment.timeLeft)
+                    tvTimeLeft.setTextColor(ContextCompat.getColor(root.context, R.color.huzzler_red))
+                }
 
                 val dateFormat = SimpleDateFormat("MMM dd, h:mm a", Locale.getDefault())
                 tvDueDate.text = root.context.getString(R.string.due, dateFormat.format(assignment.dueDate))
@@ -93,14 +103,15 @@ class AssignmentAdapter(
                     isVisible = true
                 }
 
-                // Unified UX: All assignments show 'Submit' button with red color
-                // Red color matches Huzzler brand and creates urgency
+                // Submit button - always active to allow resubmission
                 btnComplete.text = root.context.getString(R.string.submit)
                 btnComplete.setIconResource(R.drawable.ic_send)
                 btnComplete.backgroundTintList = ContextCompat.getColorStateList(root.context, R.color.huzzler_red)
-
+                btnComplete.isEnabled = true
+                btnComplete.alpha = 1.0f
                 // Submit button goes directly to submission page
                 btnComplete.setOnClickListener { onSubmitClick(assignment) }
+                
                 // Details button and card click go to detail screen
                 btnDetails.setOnClickListener { onAssignmentClick(assignment) }
                 root.setOnClickListener { onAssignmentClick(assignment) }
