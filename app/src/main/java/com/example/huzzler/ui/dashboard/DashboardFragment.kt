@@ -221,9 +221,9 @@ class DashboardFragment : Fragment() {
             val dialog = AssignmentSubmissionDialog.newInstance(
                 assignment = assignment,
                 onSubmitComplete = { submittedAssignment ->
-                    // Complete assignment and show success toast
+                    // Complete assignment and show custom success snackbar
                     viewModel.completeAssignment(submittedAssignment)
-                    showSuccessToast("Assignment completed! +${submittedAssignment.points} points earned! 🎉")
+                    showSuccessSnackbar("Assignment completed! +${submittedAssignment.points} points earned! 🎉")
                 }
             )
             dialog.show(childFragmentManager, "AssignmentSubmissionDialog")
@@ -314,18 +314,6 @@ class DashboardFragment : Fragment() {
             }, 3000)
         } catch (e: Exception) {
             android.util.Log.e("DashboardFragment", "Error showing success snackbar", e)
-        }
-    }
-    
-    private fun showSuccessToast(message: String) {
-        try {
-            android.widget.Toast.makeText(
-                requireContext(),
-                message,
-                android.widget.Toast.LENGTH_LONG
-            ).show()
-        } catch (e: Exception) {
-            android.util.Log.e("DashboardFragment", "Error showing success toast", e)
         }
     }
     
