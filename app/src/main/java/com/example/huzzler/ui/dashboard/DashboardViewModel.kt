@@ -9,6 +9,7 @@ import com.example.huzzler.data.model.AssignmentCategory
 import com.example.huzzler.data.model.AssignmentDifficulty
 import com.example.huzzler.data.model.AssignmentPriority
 import com.example.huzzler.data.model.AssignmentStatus
+import com.example.huzzler.data.model.SubmissionType
 import com.example.huzzler.data.model.Notification
 import com.example.huzzler.data.model.NotificationType
 import com.example.huzzler.data.model.User
@@ -92,6 +93,9 @@ class DashboardViewModel @Inject constructor() : ViewModel() {
             calendar.add(Calendar.DAY_OF_MONTH, -5)
             val dueDate2 = calendar.time
             
+            calendar.add(Calendar.DAY_OF_MONTH, 5)
+            val dueDate3 = calendar.time
+            
             _assignments.value = listOf(
                 Assignment(
                     id = "1",
@@ -103,7 +107,8 @@ class DashboardViewModel @Inject constructor() : ViewModel() {
                     priority = AssignmentPriority.PRIME,
                     difficulty = AssignmentDifficulty.MEDIUM,
                     category = AssignmentCategory.GAMING,
-                    status = AssignmentStatus.PENDING
+                    status = AssignmentStatus.PENDING,
+                    submissionType = SubmissionType.COMPLETE_ONLY
                 ),
                 Assignment(
                     id = "2",
@@ -115,7 +120,21 @@ class DashboardViewModel @Inject constructor() : ViewModel() {
                     priority = AssignmentPriority.GOTTA_DO,
                     difficulty = AssignmentDifficulty.MEDIUM,
                     category = AssignmentCategory.ACADEMIC,
-                    status = AssignmentStatus.PENDING
+                    status = AssignmentStatus.PENDING,
+                    submissionType = SubmissionType.COMPLETE_ONLY
+                ),
+                Assignment(
+                    id = "3",
+                    title = "Research Paper: AI Ethics in Gaming",
+                    course = "CS 310 - Software Engineering",
+                    points = 250,
+                    dueDate = dueDate3,
+                    timeLeft = "5d",
+                    priority = AssignmentPriority.PRIME,
+                    difficulty = AssignmentDifficulty.HARD,
+                    category = AssignmentCategory.PRODUCTIVITY,
+                    status = AssignmentStatus.PENDING,
+                    submissionType = SubmissionType.REQUIRES_SUBMISSION
                 )
             )
             

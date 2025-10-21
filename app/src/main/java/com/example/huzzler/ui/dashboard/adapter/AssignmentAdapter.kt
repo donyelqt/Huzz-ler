@@ -14,6 +14,7 @@ import com.example.huzzler.data.model.Assignment
 import com.example.huzzler.data.model.AssignmentCategory
 import com.example.huzzler.data.model.AssignmentDifficulty
 import com.example.huzzler.data.model.AssignmentPriority
+import com.example.huzzler.data.model.SubmissionType
 import com.example.huzzler.databinding.ItemAssignmentBinding
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -90,6 +91,12 @@ class AssignmentAdapter(
                     alpha = 0.2f
                     isVisible = true
                 }
+
+                // Unified UX: All assignments show 'Submit' button with green color
+                // Consistent icon and styling for better user experience
+                btnComplete.text = root.context.getString(R.string.submit)
+                btnComplete.setIconResource(R.drawable.ic_send)
+                btnComplete.backgroundTintList = ContextCompat.getColorStateList(root.context, R.color.green)
 
                 btnComplete.setOnClickListener { onAssignmentClick(assignment) }
                 btnDetails.setOnClickListener { onAssignmentClick(assignment) }

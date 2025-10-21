@@ -195,13 +195,33 @@ class DashboardFragment : Fragment() {
             val dialog = AssignmentDetailDialog.newInstance(
                 assignment = assignment,
                 onComplete = { assignmentToComplete ->
-                    showCompletionDialog(assignmentToComplete)
+                    // Unified UX: All assignments use submission dialog
+                    // For COMPLETE_ONLY, submission is optional (can submit empty)
+                    showSubmissionDialog(assignmentToComplete)
+                },
+                onSubmit = { assignmentToSubmit ->
+                    showSubmissionDialog(assignmentToSubmit)
                 }
             )
             dialog.show(childFragmentManager, "AssignmentDetailDialog")
         } catch (e: Exception) {
             android.util.Log.e("DashboardFragment", "Error showing assignment detail", e)
             showErrorSnackbar("Failed to open assignment details")
+        }
+    }
+    
+    private fun showSubmissionDialog(assignment: Assignment) {
+        try {
+            val dialog = AssignmentSubmissionDialog.newInstance(
+                assignment = assignment,
+                onSubmitComplete = { submittedAssignment ->
+                    viewModel.completeAssignment(submittedAssignment)
+                }
+            )
+            dialog.show(childFragmentManager, "AssignmentSubmissionDialog")
+        } catch (e: Exception) {
+            android.util.Log.e("DashboardFragment", "Error showing submission dialog", e)
+            showErrorSnackbar("Failed to open submission interface")
         }
     }
     

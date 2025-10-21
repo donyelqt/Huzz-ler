@@ -26,21 +26,20 @@ import androidx.compose.material.icons.rounded.CalendarToday
 import androidx.compose.material.icons.rounded.Category
 import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material.icons.rounded.Description
-import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.material.icons.rounded.School
 import androidx.compose.material.icons.rounded.SignalCellularAlt
 import androidx.compose.material.icons.rounded.Stars
 import androidx.compose.material.icons.rounded.TaskAlt
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -61,6 +60,7 @@ import com.example.huzzler.data.model.AssignmentCategory
 import com.example.huzzler.data.model.AssignmentDifficulty
 import com.example.huzzler.data.model.AssignmentPriority
 import com.example.huzzler.data.model.AssignmentStatus
+import com.example.huzzler.data.model.SubmissionType
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -81,7 +81,8 @@ import java.util.Locale
 fun AssignmentDetailScreen(
     assignment: Assignment,
     onBack: () -> Unit,
-    onComplete: (Assignment) -> Unit
+    onComplete: (Assignment) -> Unit,
+    onSubmit: (Assignment) -> Unit = {}
 ) {
     // Huzzler brand color (matching dashboard)
     val huzzlerRed = Color(0xFFFF1F1F)
@@ -124,6 +125,14 @@ fun AssignmentDetailScreen(
                 // Key Stats Row
                 KeyStatsRow(assignment = assignment, huzzlerRed = huzzlerRed)
                 
+                // Submit Button Section (positioned below stats for better UX)
+                if (assignment.status != AssignmentStatus.COMPLETED) {
+                    SubmitButtonSection(
+                        assignment = assignment,
+                        onSubmit = { onSubmit(assignment) }
+                    )
+                }
+                
                 // Badges Section
                 BadgesSection(assignment = assignment)
                 
@@ -136,80 +145,83 @@ fun AssignmentDetailScreen(
                 // Requirements Card
                 RequirementsCard(huzzlerRed = huzzlerRed)
                 
-                // Add spacing for FAB (reduced since FAB is now higher)
+                // Bottom spacing
                 Spacer(modifier = Modifier.height(24.dp))
             }
         }
-        
-        // Floating Action Button with motivational subtext
-        if (assignment.status != AssignmentStatus.COMPLETED) {
-            Column(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(start = 24.dp, end = 24.dp, bottom = 100.dp, top = 24.dp),
-                horizontalAlignment = Alignment.End,
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                ExtendedFloatingActionButton(
-                    onClick = { onComplete(assignment) },
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Rounded.CheckCircle,
-                            contentDescription = null,
-                            modifier = Modifier.size(24.dp)
-                        )
-                    },
-                    text = { 
-                        Text(
-                            "Complete Assignment",
-                            style = MaterialTheme.typography.labelLarge.copy(
-                                fontWeight = FontWeight.Bold,
-                                letterSpacing = 0.5.sp
-                            )
-                        )
-                    },
-                    containerColor = Color(0xFF10B981), // Success green - clear completion action
-                    contentColor = Color.White,
-                    elevation = androidx.compose.material3.FloatingActionButtonDefaults.elevation(
-                        defaultElevation = 8.dp,
-                        pressedElevation = 12.dp,
-                        hoveredElevation = 10.dp
-                    )
+    }
+}
+
+/**
+ * Submit button section - positioned inline below stats for better UX
+ * Prevents content overlap and provides clear call-to-action
+ */
+@Composable
+private fun SubmitButtonSection(
+    assignment: Assignment,
+    onSubmit: () -> Unit
+) {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        // Submit Button
+        Button(
+            onClick = onSubmit,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFF10B981) // Success green
+            ),
+            shape = RoundedCornerShape(16.dp),
+            elevation = ButtonDefaults.buttonElevation(
+                defaultElevation = 2.dp,
+                pressedElevation = 6.dp
+            )
+        ) {
+            Icon(
+                imageVector = Icons.Rounded.CheckCircle,
+                contentDescription = null,
+                modifier = Modifier.size(24.dp)
+            )
+            Spacer(modifier = Modifier.width(12.dp))
+            Text(
+                text = "Submit Assignment",
+                style = MaterialTheme.typography.labelLarge.copy(
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp
                 )
-                
-                // Motivational subtext with arrow pointing to button
-                Surface(
-                    shape = RoundedCornerShape(12.dp),
-                    color = Color.White.copy(alpha = 0.95f),
-                    shadowElevation = 4.dp
-                ) {
-                    Row(
-                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(6.dp)
-                    ) {
-                        // Arrow up icon pointing to button
-                        Icon(
-                            imageVector = Icons.Rounded.KeyboardArrowUp,
-                            contentDescription = null,
-                            modifier = Modifier.size(18.dp),
-                            tint = Color(0xFF10B981) // Match button color
-                        )
-                        Icon(
-                            imageVector = Icons.Rounded.Stars,
-                            contentDescription = null,
-                            modifier = Modifier.size(16.dp),
-                            tint = Color(0xFFF59E0B) // Gold color for points
-                        )
-                        Text(
-                            text = "Tap to earn +${assignment.points} points",
-                            style = MaterialTheme.typography.labelMedium.copy(
-                                fontWeight = FontWeight.SemiBold
-                            ),
-                            color = Color(0xFF000000)
-                        )
-                    }
-                }
+            )
+        }
+        
+        // Motivational hint card
+        Surface(
+            shape = RoundedCornerShape(12.dp),
+            color = Color.White,
+            shadowElevation = 2.dp
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Rounded.Stars,
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp),
+                    tint = Color(0xFFF59E0B) // Gold color
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "Tap to submit & earn +${assignment.points} points",
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        fontWeight = FontWeight.SemiBold
+                    ),
+                    color = Color(0xFF000000)
+                )
             }
         }
     }

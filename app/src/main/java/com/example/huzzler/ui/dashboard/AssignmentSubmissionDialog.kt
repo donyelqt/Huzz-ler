@@ -11,14 +11,13 @@ import com.example.huzzler.data.model.Assignment
 import com.example.huzzler.ui.theme.HuzzlerTheme
 
 /**
- * Full-screen DialogFragment for assignment details
- * Using DialogFragment ensures proper lifecycle management
+ * Full-screen DialogFragment for assignment submission
+ * Provides file upload and text entry interface
  */
-class AssignmentDetailDialog : DialogFragment() {
+class AssignmentSubmissionDialog : DialogFragment() {
     
     private var assignment: Assignment? = null
-    private var onComplete: ((Assignment) -> Unit)? = null
-    private var onSubmit: ((Assignment) -> Unit)? = null
+    private var onSubmitComplete: ((Assignment) -> Unit)? = null
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,16 +34,12 @@ class AssignmentDetailDialog : DialogFragment() {
             setContent {
                 HuzzlerTheme {
                     assignment?.let { assignmentData ->
-                        AssignmentDetailScreen(
+                        AssignmentSubmissionScreen(
                             assignment = assignmentData,
                             onBack = { dismiss() },
-                            onComplete = { assignmentToComplete ->
-                                onComplete?.invoke(assignmentToComplete)
-                                dismiss()
-                            },
-                            onSubmit = { assignmentToSubmit ->
-                                onSubmit?.invoke(assignmentToSubmit)
-                                dismiss()
+                            onSubmit = { assignment, files, text ->
+                                android.util.Log.d("Submission", "Files: $files, Text: $text")
+                                onSubmitComplete?.invoke(assignment)
                             }
                         )
                     }
@@ -56,13 +51,11 @@ class AssignmentDetailDialog : DialogFragment() {
     companion object {
         fun newInstance(
             assignment: Assignment,
-            onComplete: (Assignment) -> Unit,
-            onSubmit: (Assignment) -> Unit = {}
-        ): AssignmentDetailDialog {
-            return AssignmentDetailDialog().apply {
+            onSubmitComplete: (Assignment) -> Unit
+        ): AssignmentSubmissionDialog {
+            return AssignmentSubmissionDialog().apply {
                 this.assignment = assignment
-                this.onComplete = onComplete
-                this.onSubmit = onSubmit
+                this.onSubmitComplete = onSubmitComplete
             }
         }
     }

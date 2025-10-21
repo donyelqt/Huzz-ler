@@ -17,6 +17,7 @@
     <string name="view_all">View All</string>
     <string name="notifications">Notifications</string>
     <string name="complete">Complete</string>
+    <string name="submit">Submit</string>
     <string name="details">Details</string>
     <string name="due">Due: %1$s</string>
     <string name="time_left">%1$s left</string>
