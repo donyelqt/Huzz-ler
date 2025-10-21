@@ -92,11 +92,11 @@ class AssignmentAdapter(
                     isVisible = true
                 }
 
-                // Unified UX: All assignments show 'Submit' button with green color
-                // Consistent icon and styling for better user experience
+                // Unified UX: All assignments show 'Submit' button with red color
+                // Red color matches Huzzler brand and creates urgency
                 btnComplete.text = root.context.getString(R.string.submit)
                 btnComplete.setIconResource(R.drawable.ic_send)
-                btnComplete.backgroundTintList = ContextCompat.getColorStateList(root.context, R.color.green)
+                btnComplete.backgroundTintList = ContextCompat.getColorStateList(root.context, R.color.huzzler_red)
 
                 btnComplete.setOnClickListener { onAssignmentClick(assignment) }
                 btnDetails.setOnClickListener { onAssignmentClick(assignment) }

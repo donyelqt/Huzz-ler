@@ -22,6 +22,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.AccessTime
+import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.material.icons.rounded.CalendarToday
 import androidx.compose.material.icons.rounded.Category
 import androidx.compose.material.icons.rounded.CheckCircle
@@ -195,7 +196,7 @@ private fun SubmitButtonSection(
             )
         }
         
-        // Motivational hint card
+        // Motivational hint card with arrow pointing to button
         Surface(
             shape = RoundedCornerShape(12.dp),
             color = Color.White,
@@ -208,6 +209,14 @@ private fun SubmitButtonSection(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
+                // Arrow up icon pointing to button above
+                Icon(
+                    imageVector = Icons.Rounded.KeyboardArrowUp,
+                    contentDescription = null,
+                    modifier = Modifier.size(18.dp),
+                    tint = Color(0xFF10B981) // Match button color
+                )
+                Spacer(modifier = Modifier.width(4.dp))
                 Icon(
                     imageVector = Icons.Rounded.Stars,
                     contentDescription = null,
