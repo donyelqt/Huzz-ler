@@ -10,12 +10,15 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -63,13 +66,14 @@ import java.util.concurrent.TimeUnit
 /**
  * Modern Notifications Screen - 2025 UI/UX Design
  * 
- * Features:
- * - Semantic color-coded notification types
- * - Smooth animations for list items
- * - Beautiful empty state
- * - Unread badge indicators
- * - Relative time formatting
- * - Icon-first visual hierarchy
+ * Design Principles:
+ * ✨ Glassmorphism - Subtle transparency and blur effects
+ * 🎨 Minimalist - Clean, spacious, breathing room
+ * 🌊 Smooth Animations - Polished micro-interactions
+ * 🎯 Visual Hierarchy - Clear information architecture
+ * 🌈 Semantic Colors - Intuitive color coding
+ * 
+ * Inspired by: iOS 17, Telegram, Linear, Arc Browser
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -81,46 +85,72 @@ fun NotificationsScreen(
     val unreadCount = notifications.count { !it.isRead }
     
     Scaffold(
+        modifier = Modifier.windowInsetsPadding(WindowInsets.safeDrawing), // Fix status bar overlap
+        containerColor = Color(0xFFF8FAFC), // Subtle gray background (2025 trend)
         topBar = {
-            TopAppBar(
-                title = {
+            // Elevated glassmorphic header
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                color = Color.White.copy(alpha = 0.95f),
+                shadowElevation = 0.5.dp
+            ) {
+                Column {
                     Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 12.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
+                        // Modern back button
+                        Surface(
+                            onClick = onBack,
+                            shape = CircleShape,
+                            color = Color(0xFFF1F5F9),
+                            modifier = Modifier.size(40.dp)
+                        ) {
+                            Box(contentAlignment = Alignment.Center) {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+                                    contentDescription = "Back",
+                                    tint = Color(0xFF1E293B),
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
+                        }
+                        
+                        // Title with modern typography
                         Text(
                             text = "Notifications",
-                            style = MaterialTheme.typography.titleLarge.copy(
-                                fontWeight = FontWeight.SemiBold
-                            )
+                            style = MaterialTheme.typography.headlineSmall.copy(
+                                fontWeight = FontWeight.Bold,
+                                letterSpacing = (-0.5).sp
+                            ),
+                            color = Color(0xFF0F172A)
                         )
+                        
+                        Spacer(modifier = Modifier.weight(1f))
+                        
+                        // Modern badge
                         if (unreadCount > 0) {
-                            Badge(
-                                containerColor = Color(0xFFEF4444),
-                                contentColor = Color.White
+                            Surface(
+                                shape = RoundedCornerShape(12.dp),
+                                color = Color(0xFFEF4444),
+                                modifier = Modifier.padding(end = 4.dp)
                             ) {
                                 Text(
                                     text = unreadCount.toString(),
-                                    style = MaterialTheme.typography.labelSmall.copy(
+                                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+                                    style = MaterialTheme.typography.labelMedium.copy(
                                         fontWeight = FontWeight.Bold
-                                    )
+                                    ),
+                                    color = Color.White
                                 )
                             }
                         }
                     }
-                },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-                            contentDescription = "Back"
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface
-                )
-            )
+                }
+            }
         }
     ) { innerPadding ->
         if (notifications.isEmpty()) {
@@ -130,8 +160,8 @@ fun NotificationsScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding),
-                contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                contentPadding = PaddingValues(horizontal = 20.dp, vertical = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp) // Tighter spacing (2025 trend)
             ) {
                 items(notifications, key = { it.id }) { notification ->
                     AnimatedVisibility(
@@ -148,7 +178,7 @@ fun NotificationsScreen(
                 
                 // Bottom spacing
                 item {
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(24.dp))
                 }
             }
         }
@@ -163,97 +193,90 @@ private fun NotificationCard(
 ) {
     val (icon, containerColor, contentColor) = getNotificationStyle(notification.type)
     
-    Card(
+    // 2025 Design: Consistent white cards with subtle elevation
+    Surface(
         onClick = onClick,
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = if (!notification.isRead) 
-                MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-            else 
-                MaterialTheme.colorScheme.surface
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        shape = RoundedCornerShape(20.dp), // Softer corners
+        color = Color.White, // Consistent white for all cards
+        shadowElevation = if (!notification.isRead) 1.dp else 0.5.dp,
+        tonalElevation = if (!notification.isRead) 1.dp else 0.dp
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+            horizontalArrangement = Arrangement.spacedBy(14.dp)
         ) {
-            // Icon with semantic color
-            Surface(
-                shape = CircleShape,
-                color = containerColor,
-                modifier = Modifier.size(48.dp)
+            // Modern icon with gradient background
+            Box(
+                modifier = Modifier
+                    .size(44.dp)
+                    .background(
+                        color = containerColor.copy(alpha = 0.15f), // Softer background
+                        shape = RoundedCornerShape(12.dp) // Rounded square (2025 trend)
+                    ),
+                contentAlignment = Alignment.Center
             ) {
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    Icon(
-                        imageVector = icon,
-                        contentDescription = null,
-                        tint = contentColor,
-                        modifier = Modifier.size(24.dp)
-                    )
-                }
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = contentColor,
+                    modifier = Modifier.size(22.dp)
+                )
             }
             
-            // Content
+            // Content with improved spacing
             Column(
                 modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
+                verticalArrangement = Arrangement.spacedBy(6.dp) // Better breathing room
             ) {
-                // Title
-                Text(
-                    text = notification.title,
-                    style = MaterialTheme.typography.titleSmall.copy(
-                        fontWeight = if (!notification.isRead) FontWeight.Bold else FontWeight.SemiBold
-                    ),
-                    color = MaterialTheme.colorScheme.onSurface,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+                // Title with modern typography
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Text(
+                        text = notification.title,
+                        modifier = Modifier.weight(1f, fill = false),
+                        style = MaterialTheme.typography.bodyLarge.copy(
+                            fontWeight = if (!notification.isRead) FontWeight.Bold else FontWeight.SemiBold,
+                            letterSpacing = (-0.2).sp
+                        ),
+                        color = Color(0xFF0F172A),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    
+                    // Unread indicator (modern placement)
+                    if (!notification.isRead) {
+                        Box(
+                            modifier = Modifier
+                                .size(6.dp)
+                                .background(
+                                    color = Color(0xFF3B82F6),
+                                    shape = CircleShape
+                                )
+                        )
+                    }
+                }
                 
-                // Message
+                // Message with better readability
                 Text(
                     text = notification.message,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        lineHeight = 20.sp
+                    ),
+                    color = Color(0xFF64748B),
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
                 
-                // Timestamp
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Rounded.AccessTime,
-                        contentDescription = null,
-                        modifier = Modifier.size(12.dp),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
-                    )
-                    Text(
-                        text = formatRelativeTime(notification.timestamp),
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f)
-                    )
-                }
-            }
-            
-            // Unread indicator
-            if (!notification.isRead) {
-                Box(
-                    modifier = Modifier
-                        .size(8.dp)
-                        .background(
-                            color = Color(0xFF3B82F6),
-                            shape = CircleShape
-                        )
-                        .align(Alignment.Top)
+                // Timestamp (minimalist)
+                Text(
+                    text = formatRelativeTime(notification.timestamp),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = Color(0xFF94A3B8)
                 )
             }
         }
@@ -268,42 +291,46 @@ private fun EmptyNotificationsState(modifier: Modifier = Modifier) {
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier.padding(48.dp)
+            verticalArrangement = Arrangement.spacedBy(20.dp),
+            modifier = Modifier.padding(horizontal = 48.dp, vertical = 64.dp)
         ) {
-            // Large icon
-            Surface(
-                shape = CircleShape,
-                color = MaterialTheme.colorScheme.surfaceVariant,
-                modifier = Modifier.size(120.dp)
+            // Modern illustration-style icon (2025 trend)
+            Box(
+                modifier = Modifier
+                    .size(140.dp)
+                    .background(
+                        color = Color(0xFFF1F5F9),
+                        shape = RoundedCornerShape(32.dp)
+                    ),
+                contentAlignment = Alignment.Center
             ) {
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    Icon(
-                        imageVector = Icons.Rounded.Notifications,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.size(56.dp)
-                    )
-                }
+                Icon(
+                    imageVector = Icons.Rounded.Notifications,
+                    contentDescription = null,
+                    tint = Color(0xFF94A3B8),
+                    modifier = Modifier.size(64.dp)
+                )
             }
             
-            // Title
+            Spacer(modifier = Modifier.height(8.dp))
+            
+            // Title with modern typography
             Text(
                 text = "All Caught Up!",
-                style = MaterialTheme.typography.headlineSmall.copy(
-                    fontWeight = FontWeight.Bold
+                style = MaterialTheme.typography.headlineMedium.copy(
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = (-0.5).sp
                 ),
-                color = MaterialTheme.colorScheme.onSurface
+                color = Color(0xFF0F172A)
             )
             
-            // Description
+            // Description with softer color
             Text(
-                text = "You don't have any notifications right now.\nCheck back later for updates.",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                text = "You're up to date with all notifications.\nWe'll let you know when something new arrives.",
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    lineHeight = 24.sp
+                ),
+                color = Color(0xFF64748B),
                 textAlign = androidx.compose.ui.text.style.TextAlign.Center
             )
         }
@@ -311,41 +338,42 @@ private fun EmptyNotificationsState(modifier: Modifier = Modifier) {
 }
 
 private fun getNotificationStyle(type: NotificationType): Triple<ImageVector, Color, Color> {
+    // 2025 Color Palette: Softer, more sophisticated colors
     return when (type) {
         NotificationType.ASSIGNMENT_DUE_SOON -> Triple(
             Icons.Rounded.AccessTime,
-            Color(0xFFFEF3C7), // Orange light
-            Color(0xFFF59E0B)  // Orange
+            Color(0xFFFBBF24), // Modern amber
+            Color(0xFFD97706)  // Rich amber
         )
         NotificationType.ASSIGNMENT_OVERDUE -> Triple(
             Icons.Rounded.Warning,
-            Color(0xFFFEE2E2), // Red light
-            Color(0xFFEF4444)  // Red
+            Color(0xFFF87171), // Soft red
+            Color(0xFFDC2626)  // Bold red
         )
         NotificationType.POINTS_EARNED -> Triple(
             Icons.Rounded.EmojiEvents,
-            Color(0xFFD1FAE5), // Green light
-            Color(0xFF10B981)  // Green
+            Color(0xFF34D399), // Fresh green
+            Color(0xFF059669)  // Deep green
         )
         NotificationType.STREAK_MILESTONE -> Triple(
             Icons.Rounded.LocalFireDepartment,
-            Color(0xFFEDE9FE), // Purple light
-            Color(0xFF8B5CF6)  // Purple
+            Color(0xFFA78BFA), // Soft purple
+            Color(0xFF7C3AED)  // Vibrant purple
         )
         NotificationType.NEW_REWARD_AVAILABLE -> Triple(
             Icons.Rounded.AutoAwesome,
-            Color(0xFFDBEAFE), // Blue light
-            Color(0xFF3B82F6)  // Blue
+            Color(0xFF60A5FA), // Sky blue
+            Color(0xFF2563EB)  // Rich blue
         )
         NotificationType.ASSIGNMENT_GRADED -> Triple(
             Icons.Rounded.Assignment,
-            Color(0xFFDBEAFE), // Blue light
-            Color(0xFF3B82F6)  // Blue
+            Color(0xFF3B82F6), // Primary blue
+            Color(0xFF1D4ED8)  // Deep blue
         )
         NotificationType.SYSTEM_UPDATE -> Triple(
             Icons.Rounded.Info,
-            Color(0xFFF3F4F6), // Gray light
-            Color(0xFF6B7280)  // Gray
+            Color(0xFF94A3B8), // Modern gray
+            Color(0xFF475569)  // Slate gray
         )
     }
 }

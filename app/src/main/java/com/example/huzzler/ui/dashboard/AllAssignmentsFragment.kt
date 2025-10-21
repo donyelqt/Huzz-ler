@@ -6,11 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.huzzler.data.model.Assignment
 import com.example.huzzler.databinding.FragmentAllAssignmentsBinding
 import com.example.huzzler.ui.dashboard.adapter.AssignmentAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class AllAssignmentsFragment : Fragment() {
@@ -37,6 +40,7 @@ class AllAssignmentsFragment : Fragment() {
         setupRecyclerView()
         setupClickListeners()
         setupObservers()
+        setupEventHandling() // Handle ViewModel events
         
         // Debug: Log ViewModel instance and data
         android.util.Log.d("AllAssignments", "ViewModel instance: ${viewModel.hashCode()}")
@@ -52,12 +56,12 @@ class AllAssignmentsFragment : Fragment() {
     private fun setupRecyclerView() {
         assignmentAdapter = AssignmentAdapter(
             onAssignmentClick = { assignment ->
+                // Card/Details click - triggers ViewModel event to show detail dialog
                 viewModel.onAssignmentClicked(assignment)
             },
             onSubmitClick = { assignment ->
-                // Navigate back to dashboard, then show submission dialog
-                findNavController().popBackStack()
-                // Note: The submission dialog will be shown by dashboard after navigation
+                // Submit button click - show submission dialog directly
+                showSubmissionDialog(assignment)
             }
         )
         
@@ -89,6 +93,80 @@ class AllAssignmentsFragment : Fragment() {
                 assignmentAdapter.submitList(it.toList()) // Create new list to trigger update
                 binding.tvAssignmentCount.text = "${it.size} Assignments"
             }
+        }
+    }
+    
+    private fun setupEventHandling() {
+        // Listen to ViewModel events (same as Dashboard)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.events.collect { event ->
+                when (event) {
+                    is DashboardEvent.NavigateToDetail -> {
+                        showAssignmentDetail(event.assignment)
+                    }
+                    is DashboardEvent.AssignmentCompleted -> {
+                        // Show success feedback
+                        android.widget.Toast.makeText(
+                            requireContext(),
+                            "✅ ${event.assignmentTitle} completed! +${event.pointsEarned} points",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    is DashboardEvent.ShowError -> {
+                        showErrorSnackbar(event.message)
+                    }
+                    else -> {
+                        // Ignore other events (like NavigateToNotifications)
+                    }
+                }
+            }
+        }
+    }
+    
+    private fun showAssignmentDetail(assignment: Assignment) {
+        try {
+            val dialog = AssignmentDetailDialog.newInstance(
+                assignment = assignment,
+                onComplete = { assignmentToComplete ->
+                    // Unified UX: All assignments use submission dialog
+                    showSubmissionDialog(assignmentToComplete)
+                },
+                onSubmit = { assignmentToSubmit ->
+                    showSubmissionDialog(assignmentToSubmit)
+                }
+            )
+            dialog.show(childFragmentManager, "AssignmentDetailDialog")
+        } catch (e: Exception) {
+            android.util.Log.e("AllAssignments", "Error showing assignment detail", e)
+            showErrorSnackbar("Failed to open assignment details")
+        }
+    }
+    
+    private fun showSubmissionDialog(assignment: Assignment) {
+        try {
+            val dialog = AssignmentSubmissionDialog.newInstance(
+                assignment = assignment,
+                onSubmitComplete = { submittedAssignment ->
+                    // Complete assignment - ViewModel will emit event
+                    viewModel.completeAssignment(submittedAssignment)
+                }
+            )
+            dialog.show(childFragmentManager, "AssignmentSubmissionDialog")
+        } catch (e: Exception) {
+            android.util.Log.e("AllAssignments", "Error showing submission dialog", e)
+            showErrorSnackbar("Failed to open submission interface")
+        }
+    }
+    
+    private fun showErrorSnackbar(message: String) {
+        try {
+            android.widget.Toast.makeText(
+                requireContext(),
+                message,
+                android.widget.Toast.LENGTH_SHORT
+            ).show()
+        } catch (e: Exception) {
+            android.util.Log.e("AllAssignments", "Error showing error snackbar", e)
         }
     }
     
