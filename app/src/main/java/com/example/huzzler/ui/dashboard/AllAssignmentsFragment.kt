@@ -38,8 +38,15 @@ class AllAssignmentsFragment : Fragment() {
         setupClickListeners()
         setupObservers()
         
-        // Debug log to verify ViewModel data
+        // Debug: Log ViewModel instance and data
+        android.util.Log.d("AllAssignments", "ViewModel instance: ${viewModel.hashCode()}")
         android.util.Log.d("AllAssignments", "Assignments count: ${viewModel.assignments.value?.size ?: 0}")
+        
+        // Force reload if no data (safety net)
+        if (viewModel.assignments.value.isNullOrEmpty()) {
+            android.util.Log.w("AllAssignments", "No assignments found, forcing reload...")
+            viewModel.loadDashboardData()
+        }
     }
     
     private fun setupRecyclerView() {

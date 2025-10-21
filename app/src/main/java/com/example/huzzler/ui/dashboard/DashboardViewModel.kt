@@ -305,6 +305,136 @@ class DashboardViewModel @Inject constructor() : ViewModel() {
             )
         )
         
+        // Notification 6: Overdue assignment
+        calendar.add(Calendar.HOUR, -6)
+        mockNotifications.add(
+            Notification(
+                id = "6",
+                type = NotificationType.ASSIGNMENT_OVERDUE,
+                title = "⚠️ Assignment Overdue",
+                message = "Your Data Structures Quiz is now overdue. Submit as soon as possible!",
+                timestamp = calendar.time,
+                isRead = false
+            )
+        )
+        
+        // Notification 7: Points milestone
+        calendar.add(Calendar.DAY_OF_MONTH, -3)
+        mockNotifications.add(
+            Notification(
+                id = "7",
+                type = NotificationType.POINTS_EARNED,
+                title = "🎉 Points Milestone!",
+                message = "Congratulations! You've reached 1,000 total points.",
+                timestamp = calendar.time,
+                isRead = true
+            )
+        )
+        
+        // Notification 8: New Valorant reward
+        calendar.add(Calendar.HOUR, -8)
+        mockNotifications.add(
+            Notification(
+                id = "8",
+                type = NotificationType.NEW_REWARD_AVAILABLE,
+                title = "New Gaming Reward",
+                message = "Valorant VP 500 is now available in the rewards store!",
+                timestamp = calendar.time,
+                isRead = false
+            )
+        )
+        
+        // Notification 9: Streak reminder
+        calendar.add(Calendar.DAY_OF_MONTH, -4)
+        mockNotifications.add(
+            Notification(
+                id = "9",
+                type = NotificationType.STREAK_MILESTONE,
+                title = "🔥 7 Day Streak Achievement!",
+                message = "Amazing! You've maintained a 7-day study streak. Keep it going!",
+                timestamp = calendar.time,
+                isRead = true
+            )
+        )
+        
+        // Notification 10: Assignment due today
+        calendar.add(Calendar.HOUR, -12)
+        mockNotifications.add(
+            Notification(
+                id = "10",
+                type = NotificationType.ASSIGNMENT_DUE_SOON,
+                title = "Due Today",
+                message = "Mobile App Development Assignment is due in 6 hours!",
+                timestamp = calendar.time,
+                isRead = false
+            )
+        )
+        
+        // Notification 11: Bonus points
+        calendar.add(Calendar.DAY_OF_MONTH, -5)
+        mockNotifications.add(
+            Notification(
+                id = "11",
+                type = NotificationType.POINTS_EARNED,
+                title = "Bonus Points Earned",
+                message = "You earned 100 bonus points for completing all Prime assignments this week!",
+                timestamp = calendar.time,
+                isRead = true
+            )
+        )
+        
+        // Notification 12: System update
+        calendar.add(Calendar.DAY_OF_MONTH, -6)
+        mockNotifications.add(
+            Notification(
+                id = "12",
+                type = NotificationType.SYSTEM_UPDATE,
+                title = "App Update Available",
+                message = "Version 2.5.0 is available with new features and improvements.",
+                timestamp = calendar.time,
+                isRead = true
+            )
+        )
+        
+        // Notification 13: Another graded assignment
+        calendar.add(Calendar.DAY_OF_MONTH, -7)
+        mockNotifications.add(
+            Notification(
+                id = "13",
+                type = NotificationType.ASSIGNMENT_GRADED,
+                title = "Perfect Score!",
+                message = "Your Algorithm Analysis assignment received 100/100. Excellent work!",
+                timestamp = calendar.time,
+                isRead = true
+            )
+        )
+        
+        // Notification 14: Academic reward unlocked
+        calendar.add(Calendar.DAY_OF_MONTH, -8)
+        mockNotifications.add(
+            Notification(
+                id = "14",
+                type = NotificationType.NEW_REWARD_AVAILABLE,
+                title = "Academic Reward Unlocked",
+                message = "Premium Study Materials bundle is now available for redemption.",
+                timestamp = calendar.time,
+                isRead = true
+            )
+        )
+        
+        // Notification 15: Urgent deadline
+        calendar.add(Calendar.MINUTE, -15)
+        mockNotifications.add(
+            Notification(
+                id = "15",
+                type = NotificationType.ASSIGNMENT_DUE_SOON,
+                title = "⏰ Final Reminder",
+                message = "Machine Learning Project is due in 2 hours. Submit now!",
+                timestamp = calendar.time,
+                isRead = false
+            )
+        )
+        
         // Update LiveData
         _notifications.value = mockNotifications.toList()
     }
