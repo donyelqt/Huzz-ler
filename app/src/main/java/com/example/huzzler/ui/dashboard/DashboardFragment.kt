@@ -98,10 +98,16 @@ class DashboardFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        assignmentAdapter = AssignmentAdapter { assignment ->
-            // Handle assignment click
-            viewModel.onAssignmentClicked(assignment)
-        }
+        assignmentAdapter = AssignmentAdapter(
+            onAssignmentClick = { assignment ->
+                // Card/Details click - show detail dialog
+                viewModel.onAssignmentClicked(assignment)
+            },
+            onSubmitClick = { assignment ->
+                // Submit button click - go directly to submission dialog
+                showSubmissionDialog(assignment)
+            }
+        )
         
         binding.rvAssignments.apply {
             layoutManager = object : LinearLayoutManager(requireContext()) {
@@ -215,7 +221,9 @@ class DashboardFragment : Fragment() {
             val dialog = AssignmentSubmissionDialog.newInstance(
                 assignment = assignment,
                 onSubmitComplete = { submittedAssignment ->
+                    // Complete assignment and show success toast
                     viewModel.completeAssignment(submittedAssignment)
+                    showSuccessToast("Assignment completed! +${submittedAssignment.points} points earned! 🎉")
                 }
             )
             dialog.show(childFragmentManager, "AssignmentSubmissionDialog")
@@ -306,6 +314,18 @@ class DashboardFragment : Fragment() {
             }, 3000)
         } catch (e: Exception) {
             android.util.Log.e("DashboardFragment", "Error showing success snackbar", e)
+        }
+    }
+    
+    private fun showSuccessToast(message: String) {
+        try {
+            android.widget.Toast.makeText(
+                requireContext(),
+                message,
+                android.widget.Toast.LENGTH_LONG
+            ).show()
+        } catch (e: Exception) {
+            android.util.Log.e("DashboardFragment", "Error showing success toast", e)
         }
     }
     

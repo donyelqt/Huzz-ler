@@ -20,7 +20,8 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class AssignmentAdapter(
-    private val onAssignmentClick: (Assignment) -> Unit
+    private val onAssignmentClick: (Assignment) -> Unit,
+    private val onSubmitClick: (Assignment) -> Unit
 ) : ListAdapter<Assignment, AssignmentAdapter.AssignmentViewHolder>(AssignmentDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AssignmentViewHolder {
@@ -98,7 +99,9 @@ class AssignmentAdapter(
                 btnComplete.setIconResource(R.drawable.ic_send)
                 btnComplete.backgroundTintList = ContextCompat.getColorStateList(root.context, R.color.huzzler_red)
 
-                btnComplete.setOnClickListener { onAssignmentClick(assignment) }
+                // Submit button goes directly to submission page
+                btnComplete.setOnClickListener { onSubmitClick(assignment) }
+                // Details button and card click go to detail screen
                 btnDetails.setOnClickListener { onAssignmentClick(assignment) }
                 root.setOnClickListener { onAssignmentClick(assignment) }
             }

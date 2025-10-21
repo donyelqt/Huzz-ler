@@ -153,7 +153,8 @@ fun AssignmentSubmissionScreen(
                 // Submit Button
                 Button(
                     onClick = {
-                        onSubmit(assignment, attachedFiles.toList(), submissionText)
+                        // Don't call onSubmit yet - wait for user to click Done
+                        // onSubmit(assignment, attachedFiles.toList(), submissionText)
                         showSuccess = true
                     },
                     enabled = isSubmissionValid,
@@ -213,7 +214,9 @@ fun AssignmentSubmissionScreen(
             enter = fadeIn() + slideInVertically(),
             exit = fadeOut() + slideOutVertically()
         ) {
-            SuccessOverlay(onDismiss = {
+            SuccessOverlay(onDone = {
+                // Call onSubmit when user clicks Done (not on initial submit)
+                onSubmit(assignment, attachedFiles.toList(), submissionText)
                 showSuccess = false
                 onBack()
             })
@@ -628,12 +631,11 @@ private fun TextEntryCard(text: String, onTextChange: (String) -> Unit) {
 }
 
 @Composable
-private fun SuccessOverlay(onDismiss: () -> Unit) {
+private fun SuccessOverlay(onDone: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black.copy(alpha = 0.7f))
-            .clickable(onClick = onDismiss),
+            .background(Color.Black.copy(alpha = 0.7f)),
         contentAlignment = Alignment.Center
     ) {
         Card(
@@ -682,7 +684,7 @@ private fun SuccessOverlay(onDismiss: () -> Unit) {
                 )
                 
                 Button(
-                    onClick = onDismiss,
+                    onClick = onDone,
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFF10B981)
