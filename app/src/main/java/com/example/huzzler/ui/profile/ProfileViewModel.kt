@@ -33,4 +33,14 @@ class ProfileViewModel @Inject constructor() : ViewModel() {
             )
         }
     }
+    
+    fun updateUserName(newName: String) {
+        viewModelScope.launch {
+            // Simulate API call
+            delay(300)
+            
+            // Update user name
+            _user.value = _user.value?.copy(name = newName)
+        }
+    }
 }

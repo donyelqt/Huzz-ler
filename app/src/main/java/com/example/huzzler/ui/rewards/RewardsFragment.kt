@@ -41,20 +41,26 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.runtime.collectAsState
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.huzzler.data.model.Reward
 import com.example.huzzler.data.model.RewardCategory
+import com.example.huzzler.data.preferences.ThemePreferences
 import com.example.huzzler.ui.theme.HuzzlerTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class RewardsFragment : Fragment() {
 
     private val viewModel: RewardsViewModel by viewModels()
+    
+    @Inject
+    lateinit var themePreferences: ThemePreferences
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -65,7 +71,10 @@ class RewardsFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                HuzzlerTheme {
+                // Observe theme preference
+                val isDarkMode by themePreferences.isDarkMode.collectAsState(initial = false)
+                
+                HuzzlerTheme(darkTheme = isDarkMode) {
                     RewardsScreenWithErrorHandling(
                         viewModel = viewModel,
                         onBack = {

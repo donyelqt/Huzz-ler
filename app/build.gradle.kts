@@ -104,6 +104,9 @@ dependencies {
     // Coroutines
     implementation(libs.coroutines.android)
 
+    // DataStore (2025 Best Practice for preferences)
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
+
     // Room Database
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)

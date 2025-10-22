@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/gray_very_light"
+    android:background="?attr/appBackgroundColor"
     tools:context=".ui.profile.ProfileFragment">
 
     <LinearLayout
@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            app:cardBackgroundColor="@color/white"
+            app:cardBackgroundColor="?attr/appCardBackgroundColor"
             app:cardCornerRadius="16dp"
             app:cardElevation="4dp">
 
@@ -48,7 +48,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
                     android:text="Doniele Arys"
-                    android:textColor="@color/black"
+                    android:textColor="?attr/appTextColor"
                     android:textSize="24sp"
                     android:textStyle="bold" />
 
@@ -59,7 +59,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
                     android:text="daa6681@students.uc-bcf.edu.ph"
-                    android:textColor="@color/gray_dark"
+                    android:textColor="?attr/appTextSecondaryColor"
                     android:textSize="14sp" />
 
                 <!-- User Rank -->
@@ -84,7 +84,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            app:cardBackgroundColor="@color/white"
+            app:cardBackgroundColor="?attr/appCardBackgroundColor"
             app:cardCornerRadius="16dp"
             app:cardElevation="2dp">
 
@@ -107,7 +107,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="1,240 Points"
-                        android:textColor="@color/black"
+                        android:textColor="?attr/appTextColor"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
@@ -115,7 +115,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Total Points"
-                        android:textColor="@color/gray_dark"
+                        android:textColor="?attr/appTextSecondaryColor"
                         android:textSize="12sp" />
 
                 </LinearLayout>
@@ -141,7 +141,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Current Streak"
-                        android:textColor="@color/gray_dark"
+                        android:textColor="?attr/appTextSecondaryColor"
                         android:textSize="12sp" />
 
                 </LinearLayout>
@@ -155,7 +155,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            app:cardBackgroundColor="@color/white"
+            app:cardBackgroundColor="?attr/appCardBackgroundColor"
             app:cardCornerRadius="16dp"
             app:cardElevation="2dp">
 
@@ -187,7 +187,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Edit Profile"
-                        android:textColor="@color/black"
+                        android:textColor="?attr/appTextColor"
                         android:textSize="16sp" />
 
                     <ImageView
@@ -220,7 +220,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Settings"
-                        android:textColor="@color/black"
+                        android:textColor="?attr/appTextColor"
                         android:textSize="16sp" />
 
                     <ImageView

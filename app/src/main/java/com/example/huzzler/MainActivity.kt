@@ -3,13 +3,18 @@ package com.example.huzzler
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.example.huzzler.data.preferences.ThemePreferences
 import com.example.huzzler.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  * Main Activity - 2025 UX Best Practices
@@ -27,9 +32,22 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    
+    @Inject
+    lateinit var themePreferences: ThemePreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Apply theme preference before setting content
+        lifecycleScope.launch {
+            themePreferences.isDarkMode.collect { isDarkMode ->
+                AppCompatDelegate.setDefaultNightMode(
+                    if (isDarkMode) AppCompatDelegate.MODE_NIGHT_YES
+                    else AppCompatDelegate.MODE_NIGHT_NO
+                )
+            }
+        }
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -41,17 +59,25 @@ class MainActivity : AppCompatActivity() {
         
         // Hide/Show bottom nav based on destination (2025 Best Practice)
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            when (destination.id) {
+            // Check by label as fallback for newly added destinations
+            val isSecondaryDestination = destination.label in listOf(
+                "All Assignments",
+                "Notifications", 
+                "Settings"
+            )
+            
+            when {
                 // Primary destinations - SHOW bottom nav
-                R.id.navigation_dashboard,
-                R.id.navigation_rewards,
-                R.id.navigation_chat,
-                R.id.navigation_profile -> {
+                destination.id == R.id.navigation_dashboard ||
+                destination.id == R.id.navigation_rewards ||
+                destination.id == R.id.navigation_chat ||
+                destination.id == R.id.navigation_profile -> {
                     navView.visibility = View.VISIBLE
                 }
-                // Secondary destinations - HIDE bottom nav
-                R.id.navigation_all_assignments,
-                R.id.navigation_notifications -> {
+                // Secondary destinations - HIDE bottom nav (by ID or label)
+                destination.id == R.id.navigation_all_assignments ||
+                destination.id == R.id.navigation_notifications ||
+                isSecondaryDestination -> {
                     navView.visibility = View.GONE
                 }
                 // Default - SHOW bottom nav

@@ -5,8 +5,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import com.example.huzzler.R
 import com.example.huzzler.databinding.FragmentProfileBinding
 import com.example.huzzler.ui.auth.SignInActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -56,12 +59,46 @@ class ProfileFragment : Fragment() {
             }
             
             btnEditProfile.setOnClickListener {
-                // Handle edit profile
+                showEditProfileDialog()
             }
             
             btnSettings.setOnClickListener {
-                // Handle settings
+                navigateToSettings()
             }
+        }
+    }
+    
+    private fun showEditProfileDialog() {
+        val currentName = viewModel.user.value?.name ?: "Doniele Arys"
+        
+        val dialog = EditProfileDialog.newInstance(
+            currentName = currentName,
+            onNameSaved = { newName ->
+                // Update name in ViewModel
+                viewModel.updateUserName(newName)
+                
+                // Show success feedback
+                Toast.makeText(
+                    requireContext(),
+                    "✅ Profile updated successfully!",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        )
+        
+        dialog.show(childFragmentManager, "EditProfileDialog")
+    }
+    
+    private fun navigateToSettings() {
+        try {
+            findNavController().navigate(R.id.action_profile_to_settings)
+        } catch (e: Exception) {
+            android.util.Log.e("ProfileFragment", "Error navigating to settings", e)
+            Toast.makeText(
+                requireContext(),
+                "Failed to open settings",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 

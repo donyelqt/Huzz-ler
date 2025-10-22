@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Custom theme attributes for light/dark mode support -->
+    <attr name="appBackgroundColor" format="color" />
+    <attr name="appSurfaceColor" format="color" />
+    <attr name="appTextColor" format="color" />
+    <attr name="appTextSecondaryColor" format="color" />
+    <attr name="appCardBackgroundColor" format="color" />
+</resources>

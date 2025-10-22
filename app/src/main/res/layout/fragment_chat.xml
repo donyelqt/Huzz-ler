@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/gray_very_light"
+    android:background="?attr/appBackgroundColor"
     tools:context=".ui.chat.ChatFragment">
 
     <LinearLayout
@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            app:cardBackgroundColor="@color/white"
+            app:cardBackgroundColor="?attr/appCardBackgroundColor"
             app:cardCornerRadius="20dp"
             app:cardElevation="3dp">
 
@@ -351,7 +351,7 @@
         android:id="@+id/layoutInput"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:background="?attr/appSurfaceColor"
         android:elevation="8dp"
         android:orientation="vertical"
         android:padding="16dp"

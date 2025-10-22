@@ -4,14 +4,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.example.huzzler.data.preferences.ThemePreferences
 import com.example.huzzler.ui.theme.HuzzlerTheme
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 /**
  * Full-screen Fragment for notifications (2025 Best Practice)
@@ -28,6 +32,9 @@ class NotificationsFragment : Fragment() {
     
     private val viewModel: DashboardViewModel by activityViewModels()
     
+    @Inject
+    lateinit var themePreferences: ThemePreferences
+    
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -36,7 +43,10 @@ class NotificationsFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                HuzzlerTheme {
+                // Observe theme preference
+                val isDarkMode by themePreferences.isDarkMode.collectAsState(initial = false)
+                
+                HuzzlerTheme(darkTheme = isDarkMode) {
                     // Use remember to observe LiveData in Compose
                     val notifications = viewModel.notifications.observeAsState(initial = emptyList())
                     
