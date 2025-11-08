@@ -337,15 +337,42 @@
         app:layout_constraintTop_toBottomOf="@id/layoutHeader"
         tools:listitem="@layout/item_chat_message_ai" />
 
-    <ProgressBar
-        android:id="@+id/progress_typing"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/typing_indicator_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="12dp"
         android:visibility="gone"
+        app:cardBackgroundColor="@color/chat_ai_background"
+        app:cardCornerRadius="18dp"
+        app:cardElevation="0dp"
+        app:strokeColor="@color/chat_ai_stroke"
+        app:strokeWidth="1dp"
         app:layout_constraintBottom_toTopOf="@id/layoutInput"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="72dp"
+            android:orientation="horizontal"
+            android:paddingHorizontal="18dp"
+            android:paddingVertical="12dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/tv_typing_indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="13sp"
+                android:lineHeight="18sp"
+                android:text="@string/huzz_is_typing" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
 
     <LinearLayout
         android:id="@+id/layoutInput"

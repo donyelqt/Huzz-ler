@@ -1,4 +1,18 @@
+import org.gradle.api.GradleException
+import org.gradle.api.Project
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
+fun Project.requireNonEmptyProperty(name: String): String {
+    val value = findProperty(name) as? String
+    if (value.isNullOrBlank()) {
+        throw GradleException("$name must be provided via gradle.properties or -P$name=<value>")
+    }
+    return value
+}
+
+val geminiApiKey: String = project.requireNonEmptyProperty("GEMINI_API_KEY")
+val geminiModel: String = project.requireNonEmptyProperty("GEMINI_MODEL")
+val geminiBaseUrl: String = project.requireNonEmptyProperty("GEMINI_BASE_URL")
 
 plugins {
     alias(libs.plugins.android.application)
@@ -20,6 +34,10 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "GEMINI_API_KEY", "\"$geminiApiKey\"")
+        buildConfigField("String", "GEMINI_MODEL", "\"$geminiModel\"")
+        buildConfigField("String", "GEMINI_BASE_URL", "\"$geminiBaseUrl\"")
     }
 
     buildTypes {
@@ -38,6 +56,7 @@ android {
     buildFeatures {
         compose = true
         viewBinding = true
+        buildConfig = true
     }
     
     composeOptions {

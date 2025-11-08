@@ -6,15 +6,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.huzzler.data.model.ChatMessage
 import com.example.huzzler.data.model.ChatOverview
+import com.example.huzzler.data.repository.chat.ChatRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.Date
 import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
-class ChatViewModel @Inject constructor() : ViewModel() {
+class ChatViewModel @Inject constructor(
+    private val chatRepository: ChatRepository
+) : ViewModel() {
 
     private val _messages = MutableLiveData<List<ChatMessage>>()
     val messages: LiveData<List<ChatMessage>> = _messages
@@ -25,9 +27,16 @@ class ChatViewModel @Inject constructor() : ViewModel() {
     private val _overview = MutableLiveData(ChatOverview())
     val overview: LiveData<ChatOverview> = _overview
 
+    private val _errorMessage = MutableLiveData<String?>()
+    val errorMessage: LiveData<String?> = _errorMessage
+
     private val messagesList = mutableListOf<ChatMessage>()
 
     fun loadInitialMessage() {
+        if (messagesList.isNotEmpty()) {
+            return
+        }
+
         val initialMessage = ChatMessage(
             id = UUID.randomUUID().toString(),
             content = "Hey buddy, need a quick way to submit during prime time? or are you rushing?",
@@ -47,64 +56,53 @@ class ChatViewModel @Inject constructor() : ViewModel() {
     }
 
     fun sendMessage(content: String) {
-        // Add user message
+        if (content.isBlank()) {
+            return
+        }
+
         val userMessage = ChatMessage(
             id = UUID.randomUUID().toString(),
             content = content,
             isFromUser = true,
             timestamp = Date()
         )
-        
+
         messagesList.add(userMessage)
         _messages.value = messagesList.toList()
-        
-        // Simulate AI response
-        generateAIResponse(content)
+
+        requestAssistantReply()
     }
 
-    private fun generateAIResponse(userMessage: String) {
+    private fun requestAssistantReply() {
         viewModelScope.launch {
             _isTyping.value = true
-            
-            // Simulate typing delay
-            delay(2000)
-            
-            val aiResponse = generateResponseBasedOnInput(userMessage)
-            
-            val aiMessage = ChatMessage(
-                id = UUID.randomUUID().toString(),
-                content = aiResponse,
-                isFromUser = false,
-                timestamp = Date()
-            )
-            
-            messagesList.add(aiMessage)
-            _messages.value = messagesList.toList()
+            _errorMessage.value = null
+
+            val result = chatRepository.generateAssistantReply(messagesList.toList())
+
+            result.onSuccess { aiMessage ->
+                messagesList.add(aiMessage)
+                _messages.value = messagesList.toList()
+            }.onFailure { throwable ->
+                _errorMessage.value = throwable.message
+
+                val fallbackMessage = ChatMessage(
+                    id = UUID.randomUUID().toString(),
+                    content = DEFAULT_FAILURE_MESSAGE,
+                    isFromUser = false,
+                    timestamp = Date()
+                )
+
+                messagesList.add(fallbackMessage)
+                _messages.value = messagesList.toList()
+            }
+
             _isTyping.value = false
         }
     }
 
-    private fun generateResponseBasedOnInput(input: String): String {
-        return when {
-            input.lowercase().contains("assignment") || input.lowercase().contains("homework") -> {
-                "I can help you with your assignments! Would you like me to check your upcoming deadlines or help you organize your tasks?"
-            }
-            input.lowercase().contains("submit") || input.lowercase().contains("upload") -> {
-                "Sure! You can submit your files through the upload button below. I'll help you organize and submit them properly."
-            }
-            input.lowercase().contains("points") || input.lowercase().contains("reward") -> {
-                "Great question about points! You currently have points that you can redeem for rewards. Check out the Rewards section to see what's available!"
-            }
-            input.lowercase().contains("help") -> {
-                "I'm here to help! I can assist you with:\n• Managing assignments\n• Submitting work\n• Tracking your progress\n• Redeeming rewards\n\nWhat would you like to do?"
-            }
-            input.lowercase().contains("hello") || input.lowercase().contains("hi") -> {
-                "Hello! I'm your Huzzler AI assistant. I'm here to help you stay productive and manage your academic tasks. What can I help you with today?"
-            }
-            else -> {
-                "That's interesting! I'm here to help you with your academic tasks and productivity. Is there anything specific you'd like assistance with?"
-            }
-        }
+    fun onErrorMessageConsumed() {
+        _errorMessage.value = null
     }
 
     fun handleFileAttachment() {
@@ -130,5 +128,9 @@ class ChatViewModel @Inject constructor() : ViewModel() {
 
         messagesList.add(systemMessage)
         _messages.value = messagesList.toList()
+    }
+
+    companion object {
+        private const val DEFAULT_FAILURE_MESSAGE = "I ran into a problem reaching the Gemini service. Please try again in a moment."
     }
 }

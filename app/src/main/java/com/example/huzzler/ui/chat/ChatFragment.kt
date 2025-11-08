@@ -13,6 +13,12 @@ import com.example.huzzler.R
 import com.example.huzzler.databinding.FragmentChatBinding
 import com.example.huzzler.ui.chat.adapter.ChatAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import com.google.android.material.snackbar.Snackbar
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ChatFragment : Fragment() {
@@ -22,6 +28,7 @@ class ChatFragment : Fragment() {
 
     private val viewModel: ChatViewModel by viewModels()
     private lateinit var chatAdapter: ChatAdapter
+    private var typingAnimationJob: Job? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -73,9 +80,7 @@ class ChatFragment : Fragment() {
             }
         }
 
-        viewModel.isTyping.observe(viewLifecycleOwner) { isTyping ->
-            binding.progressTyping.visibility = if (isTyping) View.VISIBLE else View.GONE
-        }
+        viewModel.isTyping.observe(viewLifecycleOwner, ::updateTypingIndicator)
 
         viewModel.overview.observe(viewLifecycleOwner) { overview ->
             binding.tvPrimeRateValue.text = "${overview.primeRate}%"
@@ -84,6 +89,13 @@ class ChatFragment : Fragment() {
             binding.tvOnlineStatus.apply {
                 text = if (overview.isOnline) getString(R.string.status_online) else getString(R.string.status_offline)
                 visibility = View.VISIBLE
+            }
+        }
+
+        viewModel.errorMessage.observe(viewLifecycleOwner) { message ->
+            if (!message.isNullOrBlank()) {
+                Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG).show()
+                viewModel.onErrorMessageConsumed()
             }
         }
     }
@@ -133,6 +145,34 @@ class ChatFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        typingAnimationJob?.cancel()
+        typingAnimationJob = null
         _binding = null
+    }
+
+    private fun updateTypingIndicator(isTyping: Boolean) {
+        if (isTyping) {
+            binding.typingIndicatorContainer.visibility = View.VISIBLE
+            typingAnimationJob?.cancel()
+            val frames = listOf(
+                getString(R.string.huzz_is_typing),
+                getString(R.string.huzz_is_typing) + ".",
+                getString(R.string.huzz_is_typing) + "..",
+                getString(R.string.huzz_is_typing) + "..."
+            )
+
+            typingAnimationJob = viewLifecycleOwner.lifecycleScope.launch {
+                var index = 0
+                while (isActive) {
+                    binding.tvTypingIndicator.text = frames[index % frames.size]
+                    index++
+                    delay(350L)
+                }
+            }
+        } else {
+            typingAnimationJob?.cancel()
+            typingAnimationJob = null
+            binding.typingIndicatorContainer.visibility = View.GONE
+        }
     }
 }

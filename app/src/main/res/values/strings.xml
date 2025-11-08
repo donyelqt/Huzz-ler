@@ -43,10 +43,11 @@
     <string name="suggestion_bst">I\'m struggling to start my BST implementation</string>
     <string name="suggestion_prime_window">How do I maximize my Prime Window?</string>
     <string name="suggestion_deadlines">Help me organize my upcoming deadlines</string>
-    
+
     <!-- Chat -->
     <string name="huzzler_ai">HUZZ-LER</string>
     <string name="ai_greeting">Hey buddy, need a quick way to submit during prime time? or are you rushing?</string>
+    <string name="huzz_is_typing">Huzz is writing</string>
     <string name="send_files_through">Send Files through : …</string>
     <string name="send_through">Send through : ▲</string>
     <string name="feel_free_to_ask">Feel free to ask</string>
