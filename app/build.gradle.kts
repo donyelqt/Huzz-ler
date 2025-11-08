@@ -1,11 +1,19 @@
 import org.gradle.api.GradleException
 import org.gradle.api.Project
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
+
+val secretProperties: Properties = Properties().apply {
+    val secretsFile = rootProject.file("secret.properties")
+    if (secretsFile.exists()) {
+        secretsFile.inputStream().use { load(it) }
+    }
+}
 
 fun Project.requireNonEmptyProperty(name: String): String {
-    val value = findProperty(name) as? String
+    val value = (findProperty(name) as? String) ?: secretProperties.getProperty(name)
     if (value.isNullOrBlank()) {
-        throw GradleException("$name must be provided via gradle.properties or -P$name=<value>")
+        throw GradleException("$name must be provided via gradle.properties, secret.properties, or -P$name=<value>")
     }
     return value
 }
