@@ -65,8 +65,10 @@ class SignInActivity : AppCompatActivity() {
         binding.apply {
             // Google sign in (custom MaterialButton with Google logo)
             btnSignInCanvas.setOnClickListener {
-                val signInIntent = googleSignInClient.signInIntent
-                googleSignInLauncher.launch(signInIntent)
+                googleSignInClient.signOut().addOnCompleteListener {
+                    val signInIntent = googleSignInClient.signInIntent
+                    googleSignInLauncher.launch(signInIntent)
+                }
             }
 
             // Email sign in

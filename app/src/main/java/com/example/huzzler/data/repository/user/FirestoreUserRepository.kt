@@ -42,4 +42,9 @@ class FirestoreUserRepository @Inject constructor(
         usersCollection.document(userId).update("name", newName).await()
         Unit
     }
+
+    override suspend fun deleteUserProfile(userId: String): Result<Unit> = runCatching {
+        usersCollection.document(userId).delete().await()
+        Unit
+    }
 }

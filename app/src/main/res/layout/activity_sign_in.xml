@@ -137,7 +137,7 @@
             android:layout_marginBottom="24dp"
             android:background="@drawable/bg_input_field_rounded"
             android:gravity="center_vertical"
-            android:hint="daa6681@students.uc-bcf.edu.ph"
+            android:hint="Type your email"
             android:inputType="textEmailAddress"
             android:paddingHorizontal="20dp"
             android:textColor="@color/black"

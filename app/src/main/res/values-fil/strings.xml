@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Huzzler</string>
+
+    <!-- Navigation -->
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_rewards">Mga Gantimpala</string>
+    <string name="title_chat">Chat</string>
+    <string name="title_profile">Profile</string>
+
+    <!-- Dashboard -->
+    <string name="hello_user">Kumusta, %1$s!</string>
+    <string name="maximize_potential">I-maximize natin\nang buo ang iyong potensyal</string>
+    <string name="points">Puntos</string>
+    <string name="streak">Sunod-sunod na Araw</string>
+    <string name="prime_rate">Prime Rate</string>
+    <string name="your_assignments">Mga Gawain Mo</string>
+    <string name="view_all">Tingnan Lahat</string>
+    <string name="notifications">Mga Notipikasyon</string>
+    <string name="complete">Tapos Na</string>
+    <string name="submit">Isumite</string>
+    <string name="details">Detalye</string>
+    <string name="due">Deadline: %1$s</string>
+    <string name="time_left">%1$s na lang</string>
+
+    <!-- Rewards -->
+    <string name="rewards_center">Sentro ng Gantimpala</string>
+    <string name="available_points">Magagamit na Puntos</string>
+    <string name="rank_template">Rango: %1$s</string>
+    <string name="rank_scholar">Rango: Scholar</string>
+    <string name="game_rewards">Game Rewards</string>
+    <string name="academic_perks">Mga Benepisyo sa Akademya</string>
+    <string name="popular">Sikat</string>
+    <string name="redeem">I-redeem</string>
+    <string name="points_format">%1$d puntos</string>
+    <string name="huzz_ai_title">HUZZ AI Motivator</string>
+    <string name="huzz_ai_subtitle">Personal mong kasangga sa pag-aaral</string>
+    <string name="status_online">Online</string>
+    <string name="status_offline">Offline</string>
+    <string name="metric_prime_rate">Prime Rate</string>
+    <string name="metric_day_streak">Sunod-sunod na Araw</string>
+    <string name="metric_points">Puntos</string>
+    <string name="try_asking_about">Subukan mong itanong:</string>
+    <string name="suggestion_bst">Nahihirapan akong simulan ang BST implementation ko</string>
+    <string name="suggestion_prime_window">Paano ko mamamaximize ang Prime Window ko?</string>
+    <string name="suggestion_deadlines">Tulungan mo akong ayusin ang mga paparating na deadlines</string>
+
+    <!-- Chat -->
+    <string name="huzzler_ai">HUZZ-LER</string>
+    <string name="ai_greeting">Uy buddy, kailangan mo ba ng mabilis na paraan para makapagsumite sa prime time o nagmamadali ka?</string>
+    <string name="huzz_is_typing">Nagsusulat si Huzz</string>
+    <string name="send_files_through">Ipadala ang files sa: …</string>
+    <string name="send_through">Ipadala sa: ▲</string>
+    <string name="feel_free_to_ask">Huwag mahiyang magtanong</string>
+    <string name="input_hint">Mag-type dito...</string>
+
+    <!-- Common -->
+    <string name="loading">Naglo-load...</string>
+    <string name="error">May mali</string>
+    <string name="retry">Subukang muli</string>
+</resources>

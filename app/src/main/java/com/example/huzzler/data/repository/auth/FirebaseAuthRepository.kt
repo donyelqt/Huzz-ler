@@ -28,6 +28,12 @@ class FirebaseAuthRepository @Inject constructor(
         Unit
     }
 
+    override suspend fun deleteCurrentUser(): Result<Unit> = runCatching {
+        val user = firebaseAuth.currentUser ?: throw IllegalStateException("No signed-in user")
+        user.delete().await()
+        Unit
+    }
+
     override fun signOut() {
         firebaseAuth.signOut()
     }

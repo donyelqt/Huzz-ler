@@ -160,7 +160,7 @@ class DashboardFragment : Fragment() {
                 .take(2)
 
             binding.apply {
-                tvUserName.text = if (displayName.isNotBlank()) "Hello, $displayName!" else "Hello!"
+                tvUserName.text = displayName
                 tvUserAvatar.text = initials
             }
 

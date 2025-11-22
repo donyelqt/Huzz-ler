@@ -1,9 +1,12 @@
 package com.example.huzzler.ui.profile
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -14,6 +17,7 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Language
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -29,7 +33,13 @@ import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.LocaleListCompat
+import com.example.huzzler.data.preferences.LanguagePreferences
 import com.example.huzzler.data.preferences.ThemePreferences
+import com.example.huzzler.data.repository.auth.AuthRepository
+import com.example.huzzler.data.repository.user.UserRepository
+import com.example.huzzler.ui.auth.SignInActivity
 import com.example.huzzler.ui.theme.HuzzlerTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -49,19 +59,43 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class SettingsFragment : Fragment() {
 
+    companion object {
+        // Toggle this flag to show/hide the language section in Settings
+        private const val LANGUAGE_FEATURE_ENABLED = false
+    }
+
     @Inject
     lateinit var themePreferences: ThemePreferences
+
+    @Inject
+    lateinit var authRepository: AuthRepository
+
+    @Inject
+    lateinit var userRepository: UserRepository
+
+    @Inject
+    lateinit var languagePreferences: LanguagePreferences
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        // For now, force the app to use English when the language feature is disabled
+        if (!LANGUAGE_FEATURE_ENABLED) {
+            val locales = LocaleListCompat.forLanguageTags("en")
+            AppCompatDelegate.setApplicationLocales(locales)
+            lifecycleScope.launch {
+                languagePreferences.setLanguage("en")
+            }
+        }
+
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                // Observe theme preference
+                // Observe theme and language preferences
                 val isDarkMode by themePreferences.isDarkMode.collectAsState(initial = false)
+                val languageCode by languagePreferences.languageCode.collectAsState(initial = "en")
                 
                 HuzzlerTheme(darkTheme = isDarkMode) {
                     SettingsScreen(
@@ -71,11 +105,76 @@ class SettingsFragment : Fragment() {
                                 themePreferences.setDarkMode(it)
                             }
                         },
-                        onBack = { findNavController().popBackStack() }
+                        currentLanguageCode = if (LANGUAGE_FEATURE_ENABLED) languageCode else "en",
+                        showLanguageSection = LANGUAGE_FEATURE_ENABLED,
+                        onLanguageClick = { if (LANGUAGE_FEATURE_ENABLED) showLanguagePicker() },
+                        onBack = { findNavController().popBackStack() },
+                        onDeleteAccountClick = { showDeleteAccountDialog() }
                     )
                 }
             }
         }
+    }
+
+    private fun showDeleteAccountDialog() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Delete account")
+            .setMessage("This will permanently delete your Huzzler account and all your data. This action cannot be undone.")
+            .setNegativeButton("Cancel", null)
+            .setPositiveButton("Delete") { _, _ ->
+                performAccountDeletion()
+            }
+            .show()
+    }
+
+    private fun performAccountDeletion() {
+        lifecycleScope.launch {
+            val currentUser = authRepository.getCurrentUser()
+            if (currentUser == null) {
+                Toast.makeText(requireContext(), "No signed-in user", Toast.LENGTH_SHORT).show()
+                return@launch
+            }
+
+            val userId = currentUser.uid
+
+            val firestoreResult = userRepository.deleteUserProfile(userId)
+            if (firestoreResult.isFailure) {
+                Toast.makeText(requireContext(), "Failed to delete account data", Toast.LENGTH_SHORT).show()
+                return@launch
+            }
+
+            val authResult = authRepository.deleteCurrentUser()
+            if (authResult.isFailure) {
+                val errorMessage = authResult.exceptionOrNull()?.localizedMessage
+                    ?: "Failed to delete account"
+                Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_LONG).show()
+                return@launch
+            }
+
+            Toast.makeText(requireContext(), "Account deleted successfully", Toast.LENGTH_SHORT).show()
+
+            val intent = Intent(requireContext(), SignInActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+        }
+    }
+
+    private fun showLanguagePicker() {
+        val options = arrayOf("English", "Tagalog / Filipino")
+        val codes = arrayOf("en", "fil")
+
+        AlertDialog.Builder(requireContext())
+            .setTitle("Choose language")
+            .setItems(options) { _, which ->
+                val selectedCode = codes.getOrNull(which) ?: "en"
+                lifecycleScope.launch {
+                    languagePreferences.setLanguage(selectedCode)
+                    val locales = LocaleListCompat.forLanguageTags(selectedCode)
+                    AppCompatDelegate.setApplicationLocales(locales)
+                    requireActivity().recreate()
+                }
+            }
+            .show()
     }
 }
 
@@ -84,7 +183,11 @@ class SettingsFragment : Fragment() {
 fun SettingsScreen(
     isDarkMode: Boolean,
     onThemeToggle: (Boolean) -> Unit,
-    onBack: () -> Unit
+    currentLanguageCode: String,
+    showLanguageSection: Boolean,
+    onLanguageClick: () -> Unit,
+    onBack: () -> Unit,
+    onDeleteAccountClick: () -> Unit
 ) {
     Scaffold(
         modifier = Modifier.windowInsetsPadding(WindowInsets.safeDrawing),
@@ -140,43 +243,59 @@ fun SettingsScreen(
                 .padding(20.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Language Section
-            SectionHeader("Language")
-            
+            if (showLanguageSection) {
+                // Language Section
+                SectionHeader("Language")
+
+                SettingsCard {
+                    SettingItem(
+                        icon = Icons.Rounded.Language,
+                        title = "Language",
+                        subtitle = when (currentLanguageCode) {
+                            "fil" -> "Tagalog / Filipino"
+                            else -> "English"
+                        },
+                        isEnabled = true,
+                        trailing = {
+                        },
+                        onClick = onLanguageClick
+                    )
+                }
+
+                // Info text
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "💡 You can now choose English or Tagalog for Huzzler. Full translation of all screens will come next.",
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        lineHeight = 20.sp
+                    ),
+                    color = Color(0xFF64748B),
+                    modifier = Modifier.padding(horizontal = 4.dp)
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+            }
+
+            SectionHeader("Account")
+
             SettingsCard {
                 SettingItem(
-                    icon = Icons.Rounded.Language,
-                    title = "Language",
-                    subtitle = "English (Default)",
-                    isEnabled = false,
+                    icon = Icons.Rounded.Delete,
+                    title = "Delete my account",
+                    subtitle = "Permanently remove your account and data",
                     trailing = {
-                        Surface(
-                            shape = RoundedCornerShape(6.dp),
-                            color = Color(0xFFFEF3C7)
-                        ) {
-                            Text(
-                                text = "Only",
-                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                                style = MaterialTheme.typography.labelSmall.copy(
-                                    fontWeight = FontWeight.Bold
-                                ),
-                                color = Color(0xFFA16207)
-                            )
-                        }
-                    }
+                        Text(
+                            text = "Danger",
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                            style = MaterialTheme.typography.labelSmall.copy(
+                                fontWeight = FontWeight.Bold
+                            ),
+                            color = Color(0xFFB91C1C)
+                        )
+                    },
+                    onClick = onDeleteAccountClick
                 )
             }
-            
-            // Info text
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = "💡 More languages coming soon! We're working on adding support for multiple languages.",
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    lineHeight = 20.sp
-                ),
-                color = Color(0xFF64748B),
-                modifier = Modifier.padding(horizontal = 4.dp)
-            )
         }
     }
 }
@@ -212,14 +331,15 @@ fun SettingItem(
     title: String,
     subtitle: String,
     isEnabled: Boolean = true,
-    trailing: @Composable () -> Unit
+    trailing: @Composable () -> Unit = {},
+    onClick: () -> Unit = {}
 ) {
     val alpha = if (isEnabled) 1f else 0.5f
     
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(enabled = isEnabled) { }
+            .clickable(enabled = isEnabled) { onClick() }
             .padding(16.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalAlignment = Alignment.CenterVertically
