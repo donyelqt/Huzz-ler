@@ -63,7 +63,7 @@
             android:textSize="12sp"
             android:letterSpacing="0.2" />
 
-        <!-- Canvas Sign-In Button -->
+        <!-- Google Sign-In Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_sign_in_canvas"
             android:layout_width="match_parent"
@@ -75,7 +75,7 @@
             android:insetBottom="0dp"
             android:insetTop="0dp"
             android:letterSpacing="0.04"
-            android:text="Sign in with Canvas"
+            android:text="Sign in with Google"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="16sp"

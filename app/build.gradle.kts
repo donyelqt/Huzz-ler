@@ -133,6 +133,9 @@ dependencies {
     implementation(libs.coroutines.android)
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
     
+    // Google Sign-In
+    implementation("com.google.android.gms:play-services-auth:21.2.0")
+    
     // DataStore (2025 Best Practice for preferences)
     implementation("androidx.datastore:datastore-preferences:1.1.1")
 

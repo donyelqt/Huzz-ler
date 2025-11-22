@@ -90,14 +90,48 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    fun signInWithCanvas() {
+    fun signInWithGoogle(idToken: String) {
         viewModelScope.launch {
             _authState.value = AuthState.Loading
-            
-            // Simulate Canvas OAuth flow
-            delay(2000)
-            
-            _authState.value = AuthState.Success
+
+            val result = authRepository.signInWithGoogle(idToken)
+            if (result.isFailure) {
+                val throwable = result.exceptionOrNull()
+                _authState.value = AuthState.Error(throwable?.message ?: "Google sign-in failed")
+                return@launch
+            }
+
+            val currentUser = authRepository.getCurrentUser()
+            if (currentUser == null) {
+                _authState.value = AuthState.Error("Google sign-in failed: no user")
+                return@launch
+            }
+
+            val userId = currentUser.uid
+            val profileResult = userRepository.getUserProfile(userId)
+
+            val userProfile = profileResult.getOrNull() ?: User(
+                id = userId,
+                email = currentUser.email ?: "",
+                name = currentUser.displayName ?: "",
+                points = 0,
+                streak = 0,
+                primeRate = 0,
+                rank = "Scholar"
+            )
+
+            val saveResult = if (profileResult.getOrNull() == null) {
+                userRepository.upsertUserProfile(userProfile)
+            } else {
+                Result.success(Unit)
+            }
+
+            _authState.value = saveResult.fold(
+                onSuccess = { AuthState.Success },
+                onFailure = { throwable ->
+                    AuthState.Error(throwable.message ?: "Signed in with Google, but failed to load profile")
+                }
+            )
         }
     }
 
