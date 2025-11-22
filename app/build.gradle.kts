@@ -28,6 +28,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
     alias(libs.plugins.dagger.hilt.android)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -130,7 +131,8 @@ dependencies {
 
     // Coroutines
     implementation(libs.coroutines.android)
-
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
+    
     // DataStore (2025 Best Practice for preferences)
     implementation("androidx.datastore:datastore-preferences:1.1.1")
 
@@ -147,4 +149,10 @@ dependencies {
     debugImplementation(platform(libs.androidx.compose.bom))
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+
+    implementation(platform("com.google.firebase:firebase-bom:34.5.0"))
+
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-firestore")
 }

@@ -104,6 +104,7 @@ class ProfileFragment : Fragment() {
 
     private fun logout() {
         // Clear user session and navigate to sign in
+        viewModel.logout()
         val intent = Intent(requireContext(), SignInActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)

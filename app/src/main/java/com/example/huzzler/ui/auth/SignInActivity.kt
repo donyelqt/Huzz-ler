@@ -24,6 +24,7 @@ class SignInActivity : AppCompatActivity() {
 
         setupUI()
         setupObservers()
+        viewModel.checkCurrentUser()
     }
 
     private fun setupUI() {
@@ -89,6 +90,7 @@ class SignInActivity : AppCompatActivity() {
                     binding.btnSignIn.text = "Sign in"
                     binding.btnSignInCanvas.isEnabled = true
                     // Show error message
+                    Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
                 }
                 else -> {
                     binding.btnSignIn.isEnabled = true

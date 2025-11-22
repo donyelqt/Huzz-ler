@@ -11,6 +11,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -29,7 +30,6 @@ class SignUpActivity : AppCompatActivity() {
     private val emailErrorView: TextView get() = binding.tvEmailError
     private val passwordErrorView: TextView get() = binding.tvPasswordError
     private val confirmPasswordErrorView: TextView get() = binding.tvConfirmPasswordError
-    private val verificationCodeErrorView: TextView get() = binding.tvVerificationCodeError
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,25 +55,8 @@ class SignUpActivity : AppCompatActivity() {
                     viewModel.signUp(
                         email = etEmail.text.toString().trim(),
                         password = etPassword.text.toString(),
-                        confirmPassword = etConfirmPassword.text.toString(),
-                        verificationCode = etVerificationCode.text.toString()
+                        confirmPassword = etConfirmPassword.text.toString()
                     )
-                }
-            }
-
-            // Send verification code
-            btnSendCode.setOnClickListener {
-                val email = etEmail.text.toString().trim()
-                if (isValidEmail(email)) {
-                    clearError(emailErrorView)
-                    viewModel.sendVerificationCode(email)
-                    btnSendCode.text = "Code Sent"
-                    btnSendCode.isEnabled = false
-                    btnSendCode.backgroundTintList = ColorStateList.valueOf(
-                        ContextCompat.getColor(this@SignUpActivity, R.color.gray_light)
-                    )
-                } else {
-                    showError(emailErrorView, "Please enter a valid email before requesting a code")
                 }
             }
 
@@ -97,7 +80,6 @@ class SignUpActivity : AppCompatActivity() {
                 is AuthState.Loading -> {
                     binding.btnSignUp.isEnabled = false
                     binding.btnSignUp.text = "Signing up..."
-                    binding.btnSendCode.isEnabled = false
                 }
                 is AuthState.Success -> {
                     startActivity(Intent(this, MainActivity::class.java))
@@ -106,25 +88,14 @@ class SignUpActivity : AppCompatActivity() {
                 is AuthState.Error -> {
                     binding.btnSignUp.isEnabled = true
                     binding.btnSignUp.text = "Sign up"
-                    restoreSendCodeButtonState()
                     // Show error message
+                    Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
                 }
                 else -> {
                     binding.btnSignUp.isEnabled = true
                     binding.btnSignUp.text = "Sign up"
-                    restoreSendCodeButtonState()
                 }
             }
-        }
-    }
-
-    private fun restoreSendCodeButtonState() {
-        binding.btnSendCode.apply {
-            isEnabled = true
-            text = "Send Code"
-            backgroundTintList = ColorStateList.valueOf(
-                ContextCompat.getColor(this@SignUpActivity, R.color.huzzler_red)
-            )
         }
     }
 
@@ -141,7 +112,6 @@ class SignUpActivity : AppCompatActivity() {
             etEmail.addTextChangedListener(textWatcher)
             etPassword.addTextChangedListener(textWatcher)
             etConfirmPassword.addTextChangedListener(textWatcher)
-            etVerificationCode.addTextChangedListener(textWatcher)
         }
     }
 
@@ -150,7 +120,6 @@ class SignUpActivity : AppCompatActivity() {
             val email = etEmail.text.toString().trim()
             val password = etPassword.text.toString()
             val confirmPassword = etConfirmPassword.text.toString()
-            val verificationCode = etVerificationCode.text.toString()
 
             var isValid = true
 
@@ -176,14 +145,6 @@ class SignUpActivity : AppCompatActivity() {
                 isValid = false
             } else {
                 clearError(confirmPasswordErrorView)
-            }
-
-            // Verification code validation
-            if (verificationCode.isEmpty()) {
-                showError(verificationCodeErrorView, "Please enter verification code")
-                isValid = false
-            } else {
-                clearError(verificationCodeErrorView)
             }
 
             return isValid
