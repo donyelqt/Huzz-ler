@@ -63,7 +63,7 @@ class SignInActivity : AppCompatActivity() {
 
     private fun setupUI() {
         binding.apply {
-            // Google sign in (one-tap style button)
+            // Google sign in (custom MaterialButton with Google logo)
             btnSignInCanvas.setOnClickListener {
                 val signInIntent = googleSignInClient.signInIntent
                 googleSignInLauncher.launch(signInIntent)

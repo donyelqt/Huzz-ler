@@ -63,7 +63,7 @@
             android:textSize="12sp"
             android:letterSpacing="0.2" />
 
-        <!-- Google Sign-In Button -->
+        <!-- Google Sign-In Button (custom MaterialButton with Google logo) -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_sign_in_canvas"
             android:layout_width="match_parent"
@@ -81,11 +81,11 @@
             android:textSize="16sp"
             android:textStyle="bold"
             app:cornerRadius="16dp"
-            app:icon="@drawable/ic_canvas"
+            app:icon="@drawable/googleforhuzzlerv2"
             app:iconGravity="textStart"
-            app:iconPadding="20dp"
-            app:iconSize="22dp"
-            app:iconTint="@android:color/white" />
+            app:iconPadding="16dp"
+            app:iconSize="28dp"
+            app:iconTint="@null" />
 
         <!-- Divider -->
         <LinearLayout
