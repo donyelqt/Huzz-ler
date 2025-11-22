@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "997305917588",
+    "project_id": "fir-docsantonio",
+    "storage_bucket": "fir-docsantonio.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:997305917588:android:e2699fbd342c90f254d481",
+        "android_client_info": {
+          "package_name": "com.example.huzzler"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLiM2w7LLWezLGwou16mxDtuqdsHZngyY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
