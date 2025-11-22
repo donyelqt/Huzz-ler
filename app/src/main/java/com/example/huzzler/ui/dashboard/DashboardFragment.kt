@@ -145,8 +145,23 @@ class DashboardFragment : Fragment() {
         }
         
         viewModel.user.observe(viewLifecycleOwner) { user ->
+            val displayName = if (user.name.isNotBlank()) {
+                user.name
+            } else {
+                user.email.substringBefore("@")
+            }
+
+            val initials = displayName
+                .trim()
+                .split(" ")
+                .filter { it.isNotBlank() }
+                .map { it[0].uppercaseChar() }
+                .joinToString("")
+                .take(2)
+
             binding.apply {
-                tvUserName.text = user.name.ifEmpty { "Doniele Arys" }
+                tvUserName.text = if (displayName.isNotBlank()) "Hello, $displayName!" else "Hello!"
+                tvUserAvatar.text = initials
             }
 
             bindStatCard(

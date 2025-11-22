@@ -31,7 +31,8 @@ class FirestoreUserRepository @Inject constructor(
             "streak" to user.streak,
             "primeRate" to user.primeRate,
             "rank" to user.rank,
-            "profileImageUrl" to user.profileImageUrl
+            "profileImageUrl" to user.profileImageUrl,
+            "lastStreakDate" to user.lastStreakDate
         )
         usersCollection.document(user.id).set(data, SetOptions.merge()).await()
         Unit

@@ -27,6 +27,7 @@ class SignUpActivity : AppCompatActivity() {
     private val viewModel: AuthViewModel by viewModels()
     private var isPasswordVisible = false
     private var isConfirmPasswordVisible = false
+    private val fullNameErrorView: TextView get() = binding.tvFullNameError
     private val emailErrorView: TextView get() = binding.tvEmailError
     private val passwordErrorView: TextView get() = binding.tvPasswordError
     private val confirmPasswordErrorView: TextView get() = binding.tvConfirmPasswordError
@@ -53,6 +54,7 @@ class SignUpActivity : AppCompatActivity() {
             btnSignUp.setOnClickListener {
                 if (validateForm()) {
                     viewModel.signUp(
+                        fullName = etFullName.text.toString().trim(),
                         email = etEmail.text.toString().trim(),
                         password = etPassword.text.toString(),
                         confirmPassword = etConfirmPassword.text.toString()
@@ -109,6 +111,7 @@ class SignUpActivity : AppCompatActivity() {
         }
 
         binding.apply {
+            etFullName.addTextChangedListener(textWatcher)
             etEmail.addTextChangedListener(textWatcher)
             etPassword.addTextChangedListener(textWatcher)
             etConfirmPassword.addTextChangedListener(textWatcher)
@@ -117,11 +120,20 @@ class SignUpActivity : AppCompatActivity() {
 
     private fun validateForm(): Boolean {
         binding.apply {
+            val fullName = etFullName.text.toString().trim()
             val email = etEmail.text.toString().trim()
             val password = etPassword.text.toString()
             val confirmPassword = etConfirmPassword.text.toString()
 
             var isValid = true
+
+            // Full name validation
+            if (fullName.isEmpty()) {
+                showError(fullNameErrorView, "Please enter your full name")
+                isValid = false
+            } else {
+                clearError(fullNameErrorView)
+            }
 
             // Email validation
             if (!isValidEmail(email)) {

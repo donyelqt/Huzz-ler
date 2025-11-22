@@ -42,12 +42,27 @@ class ProfileFragment : Fragment() {
 
     private fun setupObservers() {
         viewModel.user.observe(viewLifecycleOwner) { user ->
+            val displayName = if (user.name.isNotBlank()) {
+                user.name
+            } else {
+                user.email.substringBefore("@")
+            }
+
+            val initials = displayName
+                .trim()
+                .split(" ")
+                .filter { it.isNotBlank() }
+                .map { it[0].uppercaseChar() }
+                .joinToString("")
+                .take(2)
+
             binding.apply {
-                tvUserName.text = user.name.ifEmpty { "Doniele Arys" }
+                tvUserName.text = displayName
                 tvUserEmail.text = user.email
                 tvUserPoints.text = "${user.points} Points"
                 tvUserStreak.text = "${user.streak} Day Streak"
                 tvUserRank.text = user.rank
+                tvUserAvatar.text = initials
             }
         }
     }
@@ -69,7 +84,12 @@ class ProfileFragment : Fragment() {
     }
     
     private fun showEditProfileDialog() {
-        val currentName = viewModel.user.value?.name ?: "Doniele Arys"
+        val currentUser = viewModel.user.value
+        val currentName = when {
+            currentUser?.name?.isNotBlank() == true -> currentUser.name
+            !currentUser?.email.isNullOrBlank() -> currentUser?.email?.substringBefore("@") ?: ""
+            else -> ""
+        }
         
         val dialog = EditProfileDialog.newInstance(
             currentName = currentName,

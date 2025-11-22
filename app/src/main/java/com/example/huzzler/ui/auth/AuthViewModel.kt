@@ -21,7 +21,7 @@ class AuthViewModel @Inject constructor(
     private val _authState = MutableLiveData<AuthState>()
     val authState: LiveData<AuthState> = _authState
 
-    fun signUp(email: String, password: String, confirmPassword: String) {
+    fun signUp(fullName: String, email: String, password: String, confirmPassword: String) {
         viewModelScope.launch {
             if (password != confirmPassword) {
                 _authState.value = AuthState.Error("Passwords do not match")
@@ -48,7 +48,7 @@ class AuthViewModel @Inject constructor(
             val userProfile = User(
                 id = currentUser.uid,
                 email = currentUser.email ?: email,
-                name = currentUser.displayName ?: "",
+                name = if (fullName.isNotBlank()) fullName else (currentUser.displayName ?: ""),
                 points = 0,
                 streak = 0,
                 primeRate = 0,

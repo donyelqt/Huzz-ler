@@ -8,5 +8,6 @@ data class User(
     val streak: Int = 0,
     val primeRate: Int = 0,
     val rank: String = "Scholar",
-    val profileImageUrl: String = ""
+    val profileImageUrl: String = "",
+    val lastStreakDate: String = ""
 )

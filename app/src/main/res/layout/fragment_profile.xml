@@ -31,12 +31,13 @@
 
                 <!-- Profile Avatar -->
                 <TextView
+                    android:id="@+id/tv_user_avatar"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:layout_marginBottom="16dp"
                     android:background="@drawable/circle_red"
                     android:gravity="center"
-                    android:text="DA"
+                    android:text=""
                     android:textColor="@color/white"
                     android:textSize="32sp"
                     android:textStyle="bold" />
@@ -47,7 +48,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
-                    android:text="Doniele Arys"
+                    android:text=""
                     android:textColor="?attr/appTextColor"
                     android:textSize="24sp"
                     android:textStyle="bold" />

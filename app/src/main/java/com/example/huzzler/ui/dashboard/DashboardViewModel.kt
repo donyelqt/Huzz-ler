@@ -13,6 +13,8 @@ import com.example.huzzler.data.model.SubmissionType
 import com.example.huzzler.data.model.Notification
 import com.example.huzzler.data.model.NotificationType
 import com.example.huzzler.data.model.User
+import com.example.huzzler.data.repository.auth.AuthRepository
+import com.example.huzzler.data.repository.user.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -50,7 +52,10 @@ sealed interface DashboardEvent {
 }
 
 @HiltViewModel
-class DashboardViewModel @Inject constructor() : ViewModel() {
+class DashboardViewModel @Inject constructor(
+    private val authRepository: AuthRepository,
+    private val userRepository: UserRepository
+) : ViewModel() {
 
     private val _user = MutableLiveData<User>()
     val user: LiveData<User> = _user
@@ -85,18 +90,49 @@ class DashboardViewModel @Inject constructor() : ViewModel() {
         viewModelScope.launch {
             _isLoading.value = true
             
-            // Simulate API call
+            // Load current Firebase user
+            val firebaseUser = authRepository.getCurrentUser()
+            if (firebaseUser == null) {
+                _user.value = User()
+            } else {
+                val userId = firebaseUser.uid
+                val result = userRepository.getUserProfile(userId)
+
+                val loadedUser = result.fold(
+                    onSuccess = { existing ->
+                        existing ?: User(
+                            id = userId,
+                            email = firebaseUser.email ?: "",
+                            name = firebaseUser.displayName ?: "",
+                            points = 0,
+                            streak = 0,
+                            primeRate = 0,
+                            rank = "Scholar"
+                        )
+                    },
+                    onFailure = {
+                        User(
+                            id = userId,
+                            email = firebaseUser.email ?: "",
+                            name = firebaseUser.displayName ?: "",
+                            points = 0,
+                            streak = 0,
+                            primeRate = 0,
+                            rank = "Scholar"
+                        )
+                    }
+                )
+
+                _user.value = loadedUser
+
+                // Ensure profile exists in Firestore if it was missing
+                if (result.getOrNull() == null) {
+                    userRepository.upsertUserProfile(loadedUser)
+                }
+            }
+
+            // Simulate API call for assignments
             delay(1000)
-            
-            // Mock user data
-            _user.value = User(
-                id = "1",
-                email = "daa6681@students.uc-bcf.edu.ph",
-                name = "Doniele Arys",
-                points = 1240,
-                streak = 3,
-                primeRate = 87
-            )
             
             // Mock assignments data
             val calendar = Calendar.getInstance()
@@ -205,13 +241,53 @@ class DashboardViewModel @Inject constructor() : ViewModel() {
                 }
             }
             
-            // Update user points
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val now = Date()
+            val todayString = dateFormat.format(now)
+
+            val (newStreak, newStreakDate) = if (currentUser.lastStreakDate.isBlank()) {
+                1 to todayString
+            } else {
+                try {
+                    val lastDate = dateFormat.parse(currentUser.lastStreakDate)
+                    if (lastDate == null) {
+                        1 to todayString
+                    } else {
+                        val diffMillis = now.time - lastDate.time
+                        val diffDays = diffMillis / (24 * 60 * 60 * 1000)
+                        when {
+                            diffDays == 0L -> currentUser.streak to currentUser.lastStreakDate
+                            diffDays == 1L -> (currentUser.streak + 1) to todayString
+                            else -> 1 to todayString
+                        }
+                    }
+                } catch (e: Exception) {
+                    1 to todayString
+                }
+            }
+
+            // Update user stats
             val newTotalPoints = currentUser.points + assignment.points
-            val updatedUser = currentUser.copy(points = newTotalPoints)
-            
-            // Update state
+            val primeRateIncrement = if (assignment.priority == AssignmentPriority.PRIME) 5 else 1
+            val newPrimeRate = (currentUser.primeRate + primeRateIncrement).coerceAtMost(100)
+            val updatedUser = currentUser.copy(
+                points = newTotalPoints,
+                streak = newStreak,
+                primeRate = newPrimeRate,
+                lastStreakDate = newStreakDate
+            )
+
+            // Update state locally
             _assignments.value = updatedAssignments
             _user.value = updatedUser
+
+            // Persist updated stats to Firestore
+            val saveResult = userRepository.upsertUserProfile(updatedUser)
+            if (saveResult.isFailure) {
+                _events.emit(
+                    DashboardEvent.ShowError("Progress saved locally but failed to sync to cloud")
+                )
+            }
             
             // Emit success event for snackbar
             _events.emit(

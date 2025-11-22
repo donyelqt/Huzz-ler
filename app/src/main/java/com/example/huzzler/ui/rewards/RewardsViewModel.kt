@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.huzzler.data.model.Reward
 import com.example.huzzler.data.model.RewardCategory
 import com.example.huzzler.data.model.User
+import com.example.huzzler.data.repository.auth.AuthRepository
+import com.example.huzzler.data.repository.user.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -36,7 +38,10 @@ sealed interface RewardEvent {
 }
 
 @HiltViewModel
-class RewardsViewModel @Inject constructor() : ViewModel() {
+class RewardsViewModel @Inject constructor(
+    private val authRepository: AuthRepository,
+    private val userRepository: UserRepository
+) : ViewModel() {
 
     private val allRewards = mutableListOf<Reward>()
 
@@ -57,18 +62,48 @@ class RewardsViewModel @Inject constructor() : ViewModel() {
             _uiState.update { it.copy(isLoading = true) }
 
             // Simulate API call
-            delay(1000)
+            delay(500)
 
-            // Mock user data
-            val user = User(
-                id = "1",
-                email = "daa6681@students.uc-bcf.edu.ph",
-                name = "Doniele Arys",
-                points = 1280,
-                streak = 3,
-                primeRate = 87,
-                rank = "Scholar"
-            )
+            // Load current Firebase user from AuthRepository
+            val firebaseUser = authRepository.getCurrentUser()
+            val user: User? = if (firebaseUser == null) {
+                null
+            } else {
+                val userId = firebaseUser.uid
+                val result = userRepository.getUserProfile(userId)
+
+                val loadedUser = result.fold(
+                    onSuccess = { existing ->
+                        existing ?: User(
+                            id = userId,
+                            email = firebaseUser.email ?: "",
+                            name = firebaseUser.displayName ?: "",
+                            points = 0,
+                            streak = 0,
+                            primeRate = 0,
+                            rank = "Scholar"
+                        )
+                    },
+                    onFailure = {
+                        User(
+                            id = userId,
+                            email = firebaseUser.email ?: "",
+                            name = firebaseUser.displayName ?: "",
+                            points = 0,
+                            streak = 0,
+                            primeRate = 0,
+                            rank = "Scholar"
+                        )
+                    }
+                )
+
+                // Ensure profile exists in Firestore if it was missing
+                if (result.getOrNull() == null) {
+                    userRepository.upsertUserProfile(loadedUser)
+                }
+
+                loadedUser
+            }
 
             // Mock rewards data
             allRewards.clear()
@@ -183,7 +218,20 @@ class RewardsViewModel @Inject constructor() : ViewModel() {
             val updatedUser = currentUser.copy(
                 points = currentUser.points - reward.pointsCost
             )
-            
+
+            // Persist updated points to Firestore so dashboard and rewards stay in sync
+            val saveResult = userRepository.upsertUserProfile(updatedUser)
+            if (saveResult.isFailure) {
+                _events.emit(
+                    RewardEvent.RedemptionError(
+                        message = "Redemption saved locally but failed to sync to cloud.",
+                        requiredPoints = reward.pointsCost,
+                        currentPoints = currentUser.points
+                    )
+                )
+                return@launch
+            }
+
             // Update state
             _uiState.update {
                 it.copy(
@@ -191,7 +239,7 @@ class RewardsViewModel @Inject constructor() : ViewModel() {
                     rewards = filterRewards(it.selectedCategory)
                 )
             }
-            
+
             // Emit success event
             _events.emit(
                 RewardEvent.RedemptionSuccess(
