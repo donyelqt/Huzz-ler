@@ -216,18 +216,17 @@
 </LinearLayout>
 
     <!-- AI Study Planner FAB -->
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_study_planner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         android:layout_marginBottom="80dp"
-        android:text="@string/ai_study_planner"
-        android:textColor="@color/white"
+        android:contentDescription="@string/ai_study_planner"
         app:backgroundTint="@color/huzzler_red"
-        app:icon="@drawable/ic_planner"
-        app:iconTint="@color/white"
+        app:srcCompat="@drawable/ic_planner"
+        app:tint="@color/white"
         app:layout_anchor="@id/rv_assignments"
         app:layout_anchorGravity="bottom|end" />
 
