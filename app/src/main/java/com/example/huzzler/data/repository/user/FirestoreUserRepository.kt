@@ -1,6 +1,7 @@
 package com.example.huzzler.data.repository.user
 
 import com.example.huzzler.data.model.User
+import com.example.huzzler.data.repository.auth.AuthRepository
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.tasks.await
@@ -9,7 +10,8 @@ import javax.inject.Singleton
 
 @Singleton
 class FirestoreUserRepository @Inject constructor(
-    private val firestore: FirebaseFirestore
+    private val firestore: FirebaseFirestore,
+    private val authRepository: AuthRepository
 ) : UserRepository {
 
     private val usersCollection get() = firestore.collection("users")
@@ -21,6 +23,11 @@ class FirestoreUserRepository @Inject constructor(
         } else {
             snapshot.toObject(User::class.java)?.copy(id = userId)
         }
+    }
+
+    override suspend fun getCurrentUserProfile(): User? {
+        val firebaseUser = authRepository.getCurrentUser() ?: return null
+        return getUserProfile(firebaseUser.uid).getOrNull()
     }
 
     override suspend fun upsertUserProfile(user: User): Result<Unit> = runCatching {

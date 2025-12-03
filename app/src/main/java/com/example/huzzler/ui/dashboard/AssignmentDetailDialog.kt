@@ -19,6 +19,7 @@ class AssignmentDetailDialog : DialogFragment() {
     private var assignment: Assignment? = null
     private var onComplete: ((Assignment) -> Unit)? = null
     private var onSubmit: ((Assignment) -> Unit)? = null
+    private var onFocus: ((Assignment) -> Unit)? = null
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,12 +58,14 @@ class AssignmentDetailDialog : DialogFragment() {
         fun newInstance(
             assignment: Assignment,
             onComplete: (Assignment) -> Unit,
-            onSubmit: (Assignment) -> Unit = {}
+            onSubmit: (Assignment) -> Unit = {},
+            onFocus: (Assignment) -> Unit = {}
         ): AssignmentDetailDialog {
             return AssignmentDetailDialog().apply {
                 this.assignment = assignment
                 this.onComplete = onComplete
                 this.onSubmit = onSubmit
+                this.onFocus = onFocus
             }
         }
     }

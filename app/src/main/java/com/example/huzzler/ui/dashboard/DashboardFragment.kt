@@ -44,6 +44,8 @@ import com.example.huzzler.data.model.Assignment
 import com.example.huzzler.databinding.FragmentDashboardBinding
 import com.example.huzzler.databinding.LayoutDashboardStatCardBinding
 import com.example.huzzler.ui.dashboard.adapter.AssignmentAdapter
+import com.example.huzzler.ui.focus.FocusTimerDialog
+import com.example.huzzler.ui.planner.StudyPlannerDialog
 import com.example.huzzler.ui.theme.HuzzlerTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -207,6 +209,44 @@ class DashboardFragment : Fragment() {
             btnNotification.setOnClickListener {
                 viewModel.onNotificationClicked()
             }
+            
+            fabStudyPlanner.setOnClickListener {
+                showStudyPlanner()
+            }
+        }
+    }
+    
+    private fun showFocusTimer(assignment: Assignment? = null) {
+        try {
+            val dialog = FocusTimerDialog.newInstance(
+                assignment = assignment,
+                onSessionCompleted = { pointsEarned ->
+                    // Refresh dashboard to show updated points
+                    viewModel.loadDashboardData()
+                }
+            )
+            dialog.show(childFragmentManager, FocusTimerDialog.TAG)
+        } catch (e: Exception) {
+            android.util.Log.e("DashboardFragment", "Error showing focus timer", e)
+            showErrorSnackbar("Failed to open focus timer")
+        }
+    }
+    
+    private fun showStudyPlanner() {
+        try {
+            val currentAssignments = viewModel.assignments.value ?: emptyList()
+            val dialog = StudyPlannerDialog.newInstance(
+                assignments = currentAssignments,
+                onStartFocusSession = { session ->
+                    // Find the assignment and start focus timer
+                    val assignment = currentAssignments.find { it.id == session.assignmentId }
+                    showFocusTimer(assignment)
+                }
+            )
+            dialog.show(childFragmentManager, StudyPlannerDialog.TAG)
+        } catch (e: Exception) {
+            android.util.Log.e("DashboardFragment", "Error showing study planner", e)
+            showErrorSnackbar("Failed to open study planner")
         }
     }
     
@@ -221,6 +261,9 @@ class DashboardFragment : Fragment() {
                 },
                 onSubmit = { assignmentToSubmit ->
                     showSubmissionDialog(assignmentToSubmit)
+                },
+                onFocus = { assignmentToFocus ->
+                    showFocusTimer(assignmentToFocus)
                 }
             )
             dialog.show(childFragmentManager, "AssignmentDetailDialog")
