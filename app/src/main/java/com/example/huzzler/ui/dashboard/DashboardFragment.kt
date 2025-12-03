@@ -147,13 +147,16 @@ class DashboardFragment : Fragment() {
         }
         
         viewModel.user.observe(viewLifecycleOwner) { user ->
-            val displayName = if (user.name.isNotBlank()) {
+            val fullName = if (user.name.isNotBlank()) {
                 user.name
             } else {
                 user.email.substringBefore("@")
             }
 
-            val initials = displayName
+            // Show only first name to avoid overcrowding
+            val firstName = fullName.trim().split(" ").firstOrNull() ?: fullName
+
+            val initials = fullName
                 .trim()
                 .split(" ")
                 .filter { it.isNotBlank() }
@@ -162,7 +165,7 @@ class DashboardFragment : Fragment() {
                 .take(2)
 
             binding.apply {
-                tvUserName.text = displayName
+                tvUserName.text = firstName
                 tvUserAvatar.text = initials
             }
 
