@@ -1,6 +1,6 @@
 # Huzzler
 
-Huzzler is a modern e-learning and productivity companion for students. It blends rich visual dashboards, gamified rewards, and AI-assisted study tools to keep learners engaged and on track.
+Huzzler is a modern e-learning and productivity companion for procrastinating students. It blends rich visual dashboards, gamified rewards, and AI-assisted study tools to keep learners engaged and on track.
 
 ## Feature Highlights
 - **Dashboard insights**: Red-themed hero section with personalized greeting, progress stats, and assignment feed powered by `DashboardFragment.kt` and structured stat cards in `layout_dashboard_stat_card.xml`.
