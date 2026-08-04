@@ -1,4 +1,4 @@
-# Huzzler - Your Resilient Learning Buddy
+# Huzzler - Your AI Resilient Learning Buddy
 
 Huzzler is a modern e-learning and productivity AI companion for procrastinating students. It blends rich visual dashboards, gamified rewards, and AI-assisted study tools to keep learners engaged and on track.
 
